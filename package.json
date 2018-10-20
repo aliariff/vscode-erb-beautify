@@ -1,26 +1,25 @@
 {
     "name": "vscode-erb-beautify",
-    "displayName": "vscode-erb-beautify",
-    "description": "",
+    "displayName": "ERB Formatter/Beautify",
+    "description": "Format/Beautify ERB files",
     "version": "0.0.1",
     "publisher": "aliariff",
     "engines": {
         "vscode": "^1.28.0"
     },
     "categories": [
-        "Other"
+        "Formatters"
     ],
     "activationEvents": [
-        "onCommand:extension.sayHello"
+        "onLanguage:erb"
     ],
     "main": "./out/extension",
     "contributes": {
-        "commands": [
-            {
-                "command": "extension.sayHello",
-                "title": "Hello World"
-            }
-        ]
+        "languages": [{
+            "id": "erb",
+            "aliases": ["ERB"],
+            "extensions": [".erb"]
+        }]
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
