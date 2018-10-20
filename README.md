@@ -6,6 +6,7 @@ This extension basically using [htmlbeautifier](https://github.com/threedaymonk/
 
 ## Features
 
+![Demo GIF](https://drive.google.com/uc?export=view&id=1yzSYa9cau6sppFXSjWz66tJvZLAHDYCF)
 
 ## Requirements
 
