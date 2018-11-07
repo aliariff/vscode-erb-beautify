@@ -25,7 +25,38 @@
             "id": "erb",
             "aliases": ["ERB"],
             "extensions": [".erb"]
-        }]
+        }],
+        "configuration": {
+            "type": "object",
+            "title": "VSCode ERB Beautify configuration",
+            "properties": {
+                "vscode-erb-beautify.tabStops": {
+                    "type": "number",
+                    "default": 2,
+                    "description": "Set number of spaces per indent (default 2)"
+                },
+                "vscode-erb-beautify.tab": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Indent using tabs"
+                },
+                "vscode-erb-beautify.indentBy": {
+                    "type": "number",
+                    "default": 0,
+                    "description": "Indent the output by NUMBER steps (default 0)"
+                },
+                "vscode-erb-beautify.stopOnErrors": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Stop when invalid nesting is encountered in the input"
+                },
+                "vscode-erb-beautify.keepBlankLines": {
+                    "type": "number",
+                    "default": 0,
+                    "description": "Set number of consecutive blank lines"
+                }
+            }
+        }
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
