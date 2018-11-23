@@ -28,7 +28,8 @@
                     "ERB"
                 ],
                 "extensions": [
-                    ".erb"
+                    ".erb",
+                    ".html.erb"
                 ]
             }
         ],
