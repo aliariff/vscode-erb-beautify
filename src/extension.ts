@@ -36,9 +36,12 @@ export function activate(context: vscode.ExtensionContext) {
       beautifier.on("exit", code => {
         console.log(`htmlbeautifier is ready to go!`);
         const options = cli_options();
-        const beautify = cp.spawn("htmlbeautifier", [...options, document.uri.fsPath]);
+        const beautify = cp.spawn("htmlbeautifier", [
+          ...options,
+          document.uri.fsPath
+        ]);
         beautify.on("exit", code => {
-          if (code == 1 && options.includes("--stop-on-errors")) {
+          if (code === 1 && options.indexOf("--stop-on-errors") > -1) {
             cp.spawn("rm", [`${document.uri.fsPath}.tmp`]);
           }
         });
@@ -54,6 +57,7 @@ export function deactivate() {}
 
 function cli_options() {
   const config = vscode.workspace.getConfiguration("vscode-erb-beautify");
+  let acc: string[] = [];
   return Object.keys(config).reduce(function(acc, key) {
     switch (key) {
       case "indentBy":
@@ -63,15 +67,19 @@ function cli_options() {
         acc.push("--keep-blank-lines", config[key]);
         break;
       case "stopOnErrors":
-        config["stopOnErrors"] === true && acc.push("--stop-on-errors");
+        if (config["stopOnErrors"] === true) {
+          acc.push("--stop-on-errors");
+        }
         break;
       case "tab":
-        config["tab"] === true && acc.push("--tab");
+        if (config["tab"] === true) {
+          acc.push("--tab");
+        }
         break;
       case "tabStops":
         acc.push("--tab-stops", config[key]);
         break;
     }
     return acc;
-  }, []);
+  }, acc);
 }
