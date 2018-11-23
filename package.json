@@ -60,7 +60,7 @@
                 "vscode-erb-beautify.keepBlankLines": {
                     "type": "number",
                     "default": 0,
-                    "description": "Set number of consecutive blank lines"
+                    "description": "Set number of consecutive blank lines (default 0)"
                 }
             }
         }
