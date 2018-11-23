@@ -14,6 +14,16 @@ This extension basically using [htmlbeautifier](https://github.com/threedaymonk/
 gem install htmlbeautifier
 ```
 
+## Settings
+
+| Setting                              | Description                                           | Default |
+| ------------------------------------ | ----------------------------------------------------- | ------- |
+| `vscode-erb-beautify.tabStops`       | Set number of spaces per indent                       | 2       |
+| `vscode-erb-beautify.tab`            | Indent using tabs                                     | false   |
+| `vscode-erb-beautify.indentBy`       | Indent the output by NUMBER steps                     | 0       |
+| `vscode-erb-beautify.stopOnErrors`   | Stop when invalid nesting is encountered in the input | false   |
+| `vscode-erb-beautify.keepBlankLines` | Set number of consecutive blank lines                 | 0       |
+
 ## References
 
 [Issue](https://github.com/threedaymonk/htmlbeautifier/issues/49)
