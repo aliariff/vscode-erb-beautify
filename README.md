@@ -14,7 +14,7 @@ This extension basically using [htmlbeautifier](https://github.com/threedaymonk/
 gem install htmlbeautifier
 ```
 
-NOTE: For you that have a filename with extension `.html.erb`, your file might be recognized as `html` file, not as `erb ` file. In that case, add a setting in your `settings.json` like below:
+NOTE: For you that have a filename with extension `.html.erb`, your file might be recognized as `html` file, not as `erb` file. In that case, add a setting in your `settings.json` like below:
 
 ```json
 "files.associations": {
