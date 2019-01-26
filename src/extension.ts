@@ -11,7 +11,8 @@ export function activate(context: vscode.ExtensionContext) {
     provideDocumentFormattingEdits(
       document: vscode.TextDocument
     ): vscode.TextEdit[] {
-      const beautifier = cp.spawn("htmlbeautifier", ["-v"]);
+      const ext = process.platform === "win32" ? ".bat" : "";
+      const beautifier = cp.spawn(`htmlbeautifier${ext}`, ["-v"]);
 
       beautifier.on("error", err => {
         if (err.message.includes("ENOENT")) {
@@ -36,7 +37,7 @@ export function activate(context: vscode.ExtensionContext) {
       beautifier.on("exit", code => {
         console.log(`htmlbeautifier is ready to go!`);
         const options = cli_options();
-        const beautify = cp.spawn("htmlbeautifier", [
+        const beautify = cp.spawn(`htmlbeautifier${ext}`, [
           ...options,
           document.uri.fsPath
         ]);
