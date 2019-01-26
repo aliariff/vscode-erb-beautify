@@ -37,7 +37,7 @@ export function activate(context: vscode.ExtensionContext) {
       beautifier.on("exit", code => {
         console.log(`htmlbeautifier is ready to go!`);
         const options = cli_options();
-        const beautify = cp.spawn("htmlbeautifier", [
+        const beautify = cp.spawn(`htmlbeautifier${ext}`, [
           ...options,
           document.uri.fsPath
         ]);
