@@ -61,7 +61,12 @@
                     "type": "number",
                     "default": 0,
                     "description": "Set number of consecutive blank lines (default 0)"
-                }
+                },
+                "vscode-erb-beautify.executePath": {
+					"type": "string",
+					"default": "",
+					"description": "execution path of htmlbeautifier."
+				}
             }
         }
     },

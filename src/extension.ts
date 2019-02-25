@@ -11,8 +11,18 @@ export function activate(context: vscode.ExtensionContext) {
     provideDocumentFormattingEdits(
       document: vscode.TextDocument
     ): vscode.TextEdit[] {
+      const conf = vscode.workspace.getConfiguration('vscode-erb-beautify');
       const ext = process.platform === "win32" ? ".bat" : "";
-      const beautifier = cp.spawn(`htmlbeautifier${ext}`, ["-v"]);
+      const path = conf.get('executePath', '');
+      const cmd = `htmlbeautifier${ext}`;
+      let command; 
+
+      if (path.length !== 0) {
+          command = path + cmd;
+      } else {
+          command = cmd
+      }
+      const beautifier = cp.spawn(command, ["-v"]);
 
       beautifier.on("error", err => {
         if (err.message.includes("ENOENT")) {
@@ -37,7 +47,7 @@ export function activate(context: vscode.ExtensionContext) {
       beautifier.on("exit", code => {
         console.log(`htmlbeautifier is ready to go!`);
         const options = cli_options();
-        const beautify = cp.spawn(`htmlbeautifier${ext}`, [
+        const beautify = cp.spawn(command, [
           ...options,
           document.uri.fsPath
         ]);
