@@ -8,7 +8,7 @@
     "bugs": "https://github.com/aliariff/vscode-erb-beautify/issues",
     "repository": {
         "type": "git",
-        "url": "https://github.com/aliariff/vscode-erb-beautify"
+        "url": "https://github.com/victorvbello/vscode-erb-beautify"
     },
     "engines": {
         "vscode": "^1.28.0"
@@ -61,7 +61,12 @@
                     "type": "number",
                     "default": 0,
                     "description": "Set number of consecutive blank lines (default 0)"
-                }
+                },
+                "vscode-erb-beautify.executePath": {
+					"type": "string",
+					"default": "",
+					"description": "execution path of htmlbeautifier."
+				}
             }
         }
     },
