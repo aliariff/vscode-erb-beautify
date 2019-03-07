@@ -15,7 +15,7 @@ export function activate(context: vscode.ExtensionContext) {
       const ext = process.platform === "win32" ? ".bat" : "";
       const path = conf.get('executePath', '');
       const cmd = `htmlbeautifier${ext}`;
-      let command; 
+      let command = ""; 
 
       if (path.length !== 0) {
           command = path + cmd;

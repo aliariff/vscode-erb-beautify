@@ -8,7 +8,7 @@
     "bugs": "https://github.com/aliariff/vscode-erb-beautify/issues",
     "repository": {
         "type": "git",
-        "url": "https://github.com/aliariff/vscode-erb-beautify"
+        "url": "https://github.com/victorvbello/vscode-erb-beautify"
     },
     "engines": {
         "vscode": "^1.28.0"
