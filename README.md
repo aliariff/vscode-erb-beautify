@@ -1,5 +1,7 @@
 # ERB Formatter/Beautify
 
+[![Test & Release](https://github.com/aliariff/vscode-erb-beautify/actions/workflows/ci.yaml/badge.svg)](https://github.com/aliariff/vscode-erb-beautify/actions/workflows/ci.yaml)
+
 Most of solution that exist in the internet is tell you to create a task and call it using ctrl-shift-p menu.
 
 This extension basically using [htmlbeautifier](https://github.com/threedaymonk/htmlbeautifier) to format your file using the Formatter API from the vscode, so no need to create a hack using Task, etc.
