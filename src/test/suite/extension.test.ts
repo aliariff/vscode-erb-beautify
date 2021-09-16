@@ -4,7 +4,6 @@ import * as assert from "assert";
 // as well as import your extension to test it
 import * as vscode from "vscode";
 // import * as myExtension from '../../extension';
-import * as fs from "fs/promises";
 
 suite("ERB Formatter/Beautify tests", () => {
   const FIXTURE = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -103,10 +102,11 @@ suite("ERB Formatter/Beautify tests", () => {
   const sleep = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
 
-  setup(async () => {
-    // cleanup all configurations
-    await fs.rm("out/test/.vscode", { recursive: true, force: true });
-  });
+  async function changeConfig(key: string, value: any) {
+    await vscode.workspace
+      .getConfiguration()
+      .update(key, value, vscode.ConfigurationTarget.Global);
+  }
 
   async function formatDocument() {
     const document = await vscode.workspace.openTextDocument({
@@ -120,14 +120,13 @@ suite("ERB Formatter/Beautify tests", () => {
     assert.strictEqual(document.getText(), CORRECT);
   }
 
-  test("formats whole document", async () => {
+  test("formats whole document without bundler", async () => {
+    await changeConfig("vscode-erb-beautify.useBundler", false);
     await formatDocument();
   });
 
   test("formats whole document using bundler", async () => {
-    await vscode.workspace
-      .getConfiguration("vscode-erb-beautify")
-      .update("useBundler", true);
+    await changeConfig("vscode-erb-beautify.useBundler", true);
     await formatDocument();
   });
 });

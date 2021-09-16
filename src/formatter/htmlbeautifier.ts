@@ -9,7 +9,7 @@ export default class HtmlBeautifier {
       console.time(cmd);
 
       const htmlbeautifier = cp.spawn(this.exe, this.cliOptions, {
-        cwd: vscode.workspace.rootPath,
+        cwd: vscode.workspace.rootPath || __dirname,
       });
 
       if (htmlbeautifier.stdin === null || htmlbeautifier.stdout === null) {
