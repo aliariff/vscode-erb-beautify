@@ -21,6 +21,7 @@ export default class HtmlBeautifier {
       }
 
       let result = "";
+      let errorMessage = "";
       htmlbeautifier.on("error", (err) => {
         console.warn(err);
         vscode.window.showErrorMessage(
@@ -31,10 +32,13 @@ export default class HtmlBeautifier {
       htmlbeautifier.stdout.on("data", (data) => {
         result += data.toString();
       });
+      htmlbeautifier.stderr.on("data", (data) => {
+        errorMessage += data.toString();
+      });
       htmlbeautifier.on("exit", (code) => {
         if (code) {
           vscode.window.showErrorMessage(
-            `htmlbeautifier failed with exit code: ${code}`
+            `failed with exit code: ${code}. '${errorMessage}'`
           );
           return reject();
         }
