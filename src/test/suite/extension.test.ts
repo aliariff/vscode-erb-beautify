@@ -5,11 +5,117 @@ import * as assert from "assert";
 import * as vscode from "vscode";
 // import * as myExtension from '../../extension';
 
-suite("Extension Test Suite", () => {
-  vscode.window.showInformationMessage("Start all tests.");
+suite("ERB Formatter/Beautify tests", () => {
+  const FIXTURE = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+      <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+      <head>
+      <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+      <script src="/javascript/prototype.js" type="text/javascript"></script>
+      <link rel="stylesheet" type="text/css" href="/stylesheets/screen.css" media="screen"/>
+      <!--[if IE 6]>
+      <link rel="stylesheet" href="/stylesheets/screen_ie6.css" type="text/css" />
+      <![endif]-->
+      <title>Title Goes Here</title>
+      <script type="text/javascript" charset="utf-8">
+      doSomething();
+      </script>
+      </head>
+      <body>
+      <div id="something">
+      <h1>
+      Heading 1
+      </h1>
+      </div>
+      <div id="somethingElse"><p>Lorem Ipsum</p>
+      <% if @x %>
+      <% @ys.each do |y| %>
+      <p>
+      <%= h y %>
+      </p>
+      <% end %>
+      <% elsif @z %>
+      <hr />
+      <% end %>
+      </div>
+      <table>
+      <colgroup>
+      <col style="width: 50%;">
+      <col style="width: 50%;">
+      </colgroup>
+      <tbody>
+      <tr><td>First column</td></tr><tr>
+      <td>Second column</td></tr>
+      </tbody>
+      </table>
+      </body>
+      </html>`;
+  const CORRECT = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <script src="/javascript/prototype.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/screen.css" media="screen"/>
+    <!--[if IE 6]>
+      <link rel="stylesheet" href="/stylesheets/screen_ie6.css" type="text/css" />
+    <![endif]-->
+    <title>Title Goes Here</title>
+    <script type="text/javascript" charset="utf-8">
+      doSomething();
+    </script>
+  </head>
+  <body>
+    <div id="something">
+      <h1>
+        Heading 1
+      </h1>
+    </div>
+    <div id="somethingElse">
+      <p>Lorem Ipsum</p>
+      <% if @x %>
+        <% @ys.each do |y| %>
+          <p>
+            <%= h y %>
+          </p>
+        <% end %>
+      <% elsif @z %>
+        <hr />
+      <% end %>
+    </div>
+    <table>
+      <colgroup>
+        <col style="width: 50%;">
+        <col style="width: 50%;">
+      </colgroup>
+      <tbody>
+        <tr>
+          <td>First column</td>
+        </tr>
+        <tr>
+          <td>Second column</td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>
+`;
+  const wait = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
 
-  test("Sample test", () => {
-    assert.strictEqual(-1, [1, 2, 3].indexOf(5));
-    assert.strictEqual(-1, [1, 2, 3].indexOf(0));
-  });
+  test("formats whole document", () => {
+    let document: vscode.TextDocument;
+    return vscode.workspace
+      .openTextDocument({ language: "erb", content: FIXTURE })
+      .then((doc) => {
+        document = doc;
+        return vscode.window.showTextDocument(doc);
+      })
+      .then(() => wait(1500)) // we need to wait a little bit until extension is loaded
+      .then(() =>
+        vscode.commands.executeCommand("editor.action.formatDocument")
+      )
+      .then(() => wait(500)) // wait until extension executed
+      .then(() => {
+        assert.strictEqual(document.getText(), CORRECT);
+      });
+  }).timeout(20000);
 });
