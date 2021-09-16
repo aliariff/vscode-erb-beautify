@@ -22,6 +22,8 @@
             "type": "extensionHost",
             "request": "launch",
             "args": [
+                "${workspaceFolder}/out/test",
+                "--disable-extensions",
                 "--extensionDevelopmentPath=${workspaceFolder}",
                 "--extensionTestsPath=${workspaceFolder}/out/test/suite/index"
             ],
