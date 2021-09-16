@@ -11,7 +11,7 @@
         "url": "https://github.com/aliariff/vscode-erb-beautify"
     },
     "engines": {
-        "vscode": "^1.28.0"
+        "vscode": "^1.60.0"
     },
     "categories": [
         "Formatters"
@@ -19,7 +19,7 @@
     "activationEvents": [
         "onLanguage:erb"
     ],
-    "main": "./out/extension",
+    "main": "./out/extension.js",
     "contributes": {
         "languages": [
             {
@@ -37,6 +37,21 @@
             "type": "object",
             "title": "VSCode ERB Beautify configuration",
             "properties": {
+                "vscode-erb-beautify.executePath": {
+                    "type": "string",
+                    "default": "htmlbeautifier",
+                    "description": "Path to the htmlbeautifier executable, set this to absolute path when you have different htmlbeautifier location"
+                },
+                "vscode-erb-beautify.useBundler": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Execute htmlbeautifier using bundler (ie 'bundle exec htmlbeautifier'). If this true, vscode-erb-beautify.executePath is ignored"
+                },
+                "vscode-erb-beautify.bundlerPath": {
+                    "type": "string",
+                    "default": "bundle",
+                    "description": "Path to the bundler executable, set this to absolute path when you have different bundler location"
+                },
                 "vscode-erb-beautify.tabStops": {
                     "type": "number",
                     "default": 2,
@@ -69,14 +84,21 @@
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install",
-        "test": "npm run compile && node ./node_modules/vscode/bin/test"
+        "pretest": "npm run compile && npm run lint",
+        "lint": "eslint src --ext ts",
+        "test": "node ./out/test/runTest.js"
     },
     "devDependencies": {
-        "@types/mocha": "^2.2.42",
-        "@types/node": "^8.10.38",
-        "tslint": "^5.8.0",
-        "typescript": "^2.6.1",
-        "vscode": "^1.1.21"
+        "@types/vscode": "^1.60.0",
+        "@types/glob": "^7.1.3",
+        "@types/mocha": "^8.2.2",
+        "@types/node": "14.x",
+        "eslint": "^7.27.0",
+        "@typescript-eslint/eslint-plugin": "^4.26.0",
+        "@typescript-eslint/parser": "^4.26.0",
+        "glob": "^7.1.7",
+        "mocha": "^8.4.0",
+        "typescript": "^4.3.2",
+        "vscode-test": "^1.5.2"
     }
 }
