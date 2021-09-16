@@ -14,7 +14,7 @@ export function activate(context: vscode.ExtensionContext) {
       const ext = process.platform === "win32" ? ".bat" : "";
       const beautifier = cp.spawn(`htmlbeautifier${ext}`, ["-v"]);
 
-      beautifier.on("error", err => {
+      beautifier.on("error", (err) => {
         if (err.message.includes("ENOENT")) {
           vscode.window.showErrorMessage(
             `couldn't find htmlbeautifier for formatting (ENOENT)`
@@ -26,22 +26,22 @@ export function activate(context: vscode.ExtensionContext) {
         }
       });
 
-      beautifier.stderr.on("data", data => {
+      beautifier.stderr.on("data", (data) => {
         console.log(`htmlbeautifier stderr ${data}`);
       });
 
-      beautifier.stdout.on("data", data => {
+      beautifier.stdout.on("data", (data) => {
         console.log(`htmlbeautifier stdout ${data}`);
       });
 
-      beautifier.on("exit", code => {
+      beautifier.on("exit", (code) => {
         console.log(`htmlbeautifier is ready to go!`);
         const options = cli_options();
         const beautify = cp.spawn(`htmlbeautifier${ext}`, [
           ...options,
-          document.uri.fsPath
+          document.uri.fsPath,
         ]);
-        beautify.on("exit", code => {
+        beautify.on("exit", (code) => {
           if (code === 1 && options.indexOf("--stop-on-errors") > -1) {
             cp.spawn("rm", [`${document.uri.fsPath}.tmp`]);
           }
@@ -49,7 +49,7 @@ export function activate(context: vscode.ExtensionContext) {
       });
 
       return [];
-    }
+    },
   });
 }
 
@@ -59,7 +59,7 @@ export function deactivate() {}
 function cli_options() {
   const config = vscode.workspace.getConfiguration("vscode-erb-beautify");
   let acc: string[] = [];
-  return Object.keys(config).reduce(function(acc, key) {
+  return Object.keys(config).reduce(function (acc, key) {
     switch (key) {
       case "indentBy":
         acc.push("--indent-by", config[key]);
