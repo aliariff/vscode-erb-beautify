@@ -37,6 +37,21 @@
             "type": "object",
             "title": "VSCode ERB Beautify configuration",
             "properties": {
+                "vscode-erb-beautify.executePath": {
+                    "type": "string",
+                    "default": "htmlbeautifier",
+                    "description": "Path to the htmlbeautifier executable, set this to absolute path when you have different htmlbeautifier location"
+                },
+                "vscode-erb-beautify.useBundler": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Execute htmlbeautifier using bundler (ie 'bundle exec htmlbeautifier'). If this true, vscode-erb-beautify.executePath is ignored"
+                },
+                "vscode-erb-beautify.bundlerPath": {
+                    "type": "string",
+                    "default": "bundle",
+                    "description": "Path to the bundler executable, set this to absolute path when you have different bundler location"
+                },
                 "vscode-erb-beautify.tabStops": {
                     "type": "number",
                     "default": 2,
