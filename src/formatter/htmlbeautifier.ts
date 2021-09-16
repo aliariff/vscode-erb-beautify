@@ -51,12 +51,17 @@ export default class HtmlBeautifier {
     const executePath = config.get("executePath", "htmlbeautifier");
     const useBundler = config.get("useBundler", false);
     const bundlerPath = config.get("bundlerPath", "bundle");
-    return useBundler ? `${bundlerPath} exec htmlbeautifier` : executePath;
+    return useBundler ? `${bundlerPath}` : executePath;
   }
 
   private get cliOptions(): string[] {
     const config = vscode.workspace.getConfiguration("vscode-erb-beautify");
     let acc: string[] = [];
+
+    if (config.get("useBundler")) {
+      acc.push("exec", "htmlbeautifier");
+    }
+
     return Object.keys(config).reduce(function (acc, key) {
       switch (key) {
         case "indentBy":
