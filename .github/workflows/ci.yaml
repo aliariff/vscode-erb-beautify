@@ -19,8 +19,15 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 10.x
+      - name: Install Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
       - name: Install dependencies
-        run: npm install
+        run: >
+          npm install
+          gem install htmlbeautifier
       - name: Run headless test (${{ matrix.os }})
         run: xvfb-run -a npm test
         if: runner.os == 'Linux'
