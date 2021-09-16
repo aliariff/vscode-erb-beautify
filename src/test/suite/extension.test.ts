@@ -4,6 +4,7 @@ import * as assert from "assert";
 // as well as import your extension to test it
 import * as vscode from "vscode";
 // import * as myExtension from '../../extension';
+import * as fs from "fs/promises";
 
 suite("ERB Formatter/Beautify tests", () => {
   const FIXTURE = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -98,24 +99,35 @@ suite("ERB Formatter/Beautify tests", () => {
   </body>
 </html>
 `;
-  const wait = (ms: number) =>
+
+  const sleep = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
 
-  test("formats whole document", () => {
-    let document: vscode.TextDocument;
-    return vscode.workspace
-      .openTextDocument({ language: "erb", content: FIXTURE })
-      .then((doc) => {
-        document = doc;
-        return vscode.window.showTextDocument(doc);
-      })
-      .then(() => wait(1500)) // we need to wait a little bit until extension is loaded
-      .then(() =>
-        vscode.commands.executeCommand("editor.action.formatDocument")
-      )
-      .then(() => wait(500)) // wait until extension executed
-      .then(() => {
-        assert.strictEqual(document.getText(), CORRECT);
-      });
-  }).timeout(20000);
+  setup(async () => {
+    // cleanup all configurations
+    await fs.rm("out/test/.vscode", { recursive: true, force: true });
+  });
+
+  async function formatDocument() {
+    const document = await vscode.workspace.openTextDocument({
+      language: "erb",
+      content: FIXTURE,
+    });
+    await vscode.window.showTextDocument(document);
+    await sleep(1500); // we need to wait a little bit until extension is loaded
+    await vscode.commands.executeCommand("editor.action.formatDocument");
+    await sleep(500); // wait until extension executed
+    assert.strictEqual(document.getText(), CORRECT);
+  }
+
+  test("formats whole document", async () => {
+    await formatDocument();
+  });
+
+  test("formats whole document using bundler", async () => {
+    await vscode.workspace
+      .getConfiguration("vscode-erb-beautify")
+      .update("useBundler", true);
+    await formatDocument();
+  });
 });
