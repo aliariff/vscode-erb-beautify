@@ -36,7 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
 
       beautifier.on("exit", (code) => {
         console.log(`htmlbeautifier is ready to go!`);
-        const options = cli_options();
+        const options = cliOptions();
         const beautify = cp.spawn(`htmlbeautifier${ext}`, [
           ...options,
           document.uri.fsPath,
@@ -56,7 +56,7 @@ export function activate(context: vscode.ExtensionContext) {
 // this method is called when your extension is deactivated
 export function deactivate() {}
 
-function cli_options() {
+function cliOptions() {
   const config = vscode.workspace.getConfiguration("vscode-erb-beautify");
   let acc: string[] = [];
   return Object.keys(config).reduce(function (acc, key) {
