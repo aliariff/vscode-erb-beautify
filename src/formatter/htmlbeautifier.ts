@@ -55,7 +55,8 @@ export default class HtmlBeautifier {
     const executePath = config.get("executePath", "htmlbeautifier");
     const useBundler = config.get("useBundler", false);
     const bundlerPath = config.get("bundlerPath", "bundle");
-    return useBundler ? `${bundlerPath}` : executePath;
+    const ext = process.platform === "win32" ? ".bat" : "";
+    return useBundler ? `${bundlerPath}${ext}` : `${executePath}${ext}`;
   }
 
   private get cliOptions(): string[] {
