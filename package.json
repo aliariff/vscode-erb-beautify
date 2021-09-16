@@ -100,5 +100,21 @@
         "mocha": "^8.4.0",
         "typescript": "^4.3.2",
         "vscode-test": "^1.5.2"
-    }
+    },
+    "release": {
+        "branches": "main",
+        "verifyConditions": [
+            "@semantic-release/github"
+        ],
+        "publish": [
+            "@semantic-release/github"
+        ],
+        "success": [
+            "@semantic-release/github"
+        ],
+        "fail": [
+            "@semantic-release/github"
+        ]
+    },
+    "private": true
 }
