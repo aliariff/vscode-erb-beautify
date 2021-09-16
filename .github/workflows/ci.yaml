@@ -1,3 +1,5 @@
+name: VS Code extension CI/CD
+
 on:
   push:
     branches:
