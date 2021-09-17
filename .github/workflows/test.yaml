@@ -23,6 +23,7 @@ jobs:
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
       - name: Install dependencies
         run: |
+          npm i -g npm@7
           npm install
           gem install htmlbeautifier
       - name: Run headless test (${{ matrix.os }})
