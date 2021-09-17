@@ -1,3 +1,10 @@
+## [0.3.5](https://github.com/aliariff/vscode-erb-beautify/compare/v0.3.4...v0.3.5) (2021-09-17)
+
+
+### Bug Fixes
+
+* use npm 7 for release workflow ([26a7ab2](https://github.com/aliariff/vscode-erb-beautify/commit/26a7ab25e988d5ad4a6a74a08515c009888cbb22))
+
 ## [0.3.4](https://github.com/aliariff/vscode-erb-beautify/compare/v0.3.3...v0.3.4) (2021-09-17)
 
 
