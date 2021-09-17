@@ -1,0 +1,26 @@
+name: Release
+
+on:
+  workflow_run:
+    workflows: ["Test"]
+    branches: [main]
+    types: [completed]
+
+jobs:
+  release:
+    name: Release
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: Install dependencies
+        run: npm install
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
+        run: npx semantic-release
