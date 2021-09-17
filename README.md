@@ -1,6 +1,8 @@
 # ERB Formatter/Beautify
 
 [![Test & Release](https://github.com/aliariff/vscode-erb-beautify/actions/workflows/ci.yaml/badge.svg)](https://github.com/aliariff/vscode-erb-beautify/actions/workflows/ci.yaml)
+&nbsp;
+[![Publish](https://github.com/aliariff/vscode-erb-beautify/actions/workflows/publish.yaml/badge.svg)](https://github.com/aliariff/vscode-erb-beautify/actions/workflows/publish.yaml)
 
 Most of solution that exist in the internet is tell you to create a task and call it using ctrl-shift-p menu.
 
