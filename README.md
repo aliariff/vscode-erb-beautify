@@ -1,6 +1,8 @@
 # ERB Formatter/Beautify
 
-[![Test & Release](https://github.com/aliariff/vscode-erb-beautify/actions/workflows/ci.yaml/badge.svg)](https://github.com/aliariff/vscode-erb-beautify/actions/workflows/ci.yaml)
+[![Test](https://github.com/aliariff/vscode-erb-beautify/actions/workflows/test.yaml/badge.svg)](https://github.com/aliariff/vscode-erb-beautify/actions/workflows/test.yaml)
+&nbsp;
+[![Release](https://github.com/aliariff/vscode-erb-beautify/actions/workflows/release.yaml/badge.svg)](https://github.com/aliariff/vscode-erb-beautify/actions/workflows/release.yaml)
 &nbsp;
 [![Publish](https://github.com/aliariff/vscode-erb-beautify/actions/workflows/publish.yaml/badge.svg)](https://github.com/aliariff/vscode-erb-beautify/actions/workflows/publish.yaml)
 
