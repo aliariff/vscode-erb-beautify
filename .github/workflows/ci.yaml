@@ -35,8 +35,8 @@ jobs:
         run: npm test
         if: runner.os != 'Linux'
 
-  publish:
-    name: Release and publish
+  release:
+    name: Release
     needs: test
     runs-on: ubuntu-18.04
     steps:
@@ -52,9 +52,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
         run: npx semantic-release
-      - name: Vscode release plugin
-        uses: JCofman/vscodeaction@master
-        env:
-          PUBLISHER_TOKEN: ${{ secrets.PUBLISHER_TOKEN }}
-        with:
-          args: publish -p $PUBLISHER_TOKEN
