@@ -108,7 +108,7 @@ suite("ERB Formatter/Beautify tests", () => {
       .update(key, value, vscode.ConfigurationTarget.Global);
   }
 
-  async function formatDocument() {
+  async function formatWholeDocument() {
     const document = await vscode.workspace.openTextDocument({
       language: "erb",
       content: FIXTURE,
@@ -120,13 +120,36 @@ suite("ERB Formatter/Beautify tests", () => {
     assert.strictEqual(document.getText(), CORRECT);
   }
 
+  async function formatSelectionDocument() {
+    const document = await vscode.workspace.openTextDocument({
+      language: "erb",
+      content: FIXTURE,
+    });
+    await vscode.window.showTextDocument(document);
+    await vscode.commands.executeCommand("editor.action.selectAll");
+    await sleep(1500); // we need to wait a little bit until extension is loaded
+    await vscode.commands.executeCommand("editor.action.formatSelection");
+    await sleep(500); // wait until extension executed
+    assert.strictEqual(document.getText(), CORRECT);
+  }
+
   test("formats whole document without bundler", async () => {
     await changeConfig("vscode-erb-beautify.useBundler", false);
-    await formatDocument();
+    await formatWholeDocument();
   });
 
   test("formats whole document using bundler", async () => {
     await changeConfig("vscode-erb-beautify.useBundler", true);
-    await formatDocument();
+    await formatWholeDocument();
+  });
+
+  test("formats selection without bundler", async () => {
+    await changeConfig("vscode-erb-beautify.useBundler", false);
+    await formatSelectionDocument();
+  });
+
+  test("formats selection using bundler", async () => {
+    await changeConfig("vscode-erb-beautify.useBundler", true);
+    await formatSelectionDocument();
   });
 });
