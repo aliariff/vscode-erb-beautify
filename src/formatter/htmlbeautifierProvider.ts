@@ -2,7 +2,9 @@ import * as vscode from "vscode";
 import HtmlBeautifier from "./htmlbeautifier";
 
 export default class HtmlBeautifierProvider
-  implements vscode.DocumentFormattingEditProvider
+  implements
+    vscode.DocumentFormattingEditProvider,
+    vscode.DocumentRangeFormattingEditProvider
 {
   private htmlbeautifier: HtmlBeautifier;
 
@@ -23,6 +25,23 @@ export default class HtmlBeautifierProvider
             result
           ),
         ];
+      },
+      (err) => {
+        // will be handled in format
+        return [];
+      }
+    );
+  }
+
+  public provideDocumentRangeFormattingEdits(
+    document: vscode.TextDocument,
+    range: vscode.Range,
+    options: vscode.FormattingOptions,
+    token: vscode.CancellationToken
+  ): vscode.ProviderResult<vscode.TextEdit[]> {
+    return this.htmlbeautifier.format(document.getText(range)).then(
+      (result) => {
+        return [new vscode.TextEdit(range, result)];
       },
       (err) => {
         // will be handled in format

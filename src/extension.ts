@@ -10,6 +10,10 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.languages.registerDocumentFormattingEditProvider(
       "erb",
       new HtmlBeautifierProvider()
+    ),
+    vscode.languages.registerDocumentRangeFormattingEditProvider(
+      "erb",
+      new HtmlBeautifierProvider()
     )
   );
 }
