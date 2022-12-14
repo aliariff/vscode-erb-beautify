@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import * as cp from "child_process";
+const isWsl = require("is-wsl");
 
 export default class HtmlBeautifier {
   public format(data: string): Promise<string> {
@@ -59,7 +60,7 @@ export default class HtmlBeautifier {
     const executePath = config.get("executePath", "htmlbeautifier");
     const useBundler = config.get("useBundler", false);
     const bundlerPath = config.get("bundlerPath", "bundle");
-    const ext = process.platform === "win32" ? ".bat" : "";
+    const ext = process.platform === "win32" && !isWsl ? ".bat" : "";
     return useBundler ? `${bundlerPath}${ext}` : `${executePath}${ext}`;
   }
 
