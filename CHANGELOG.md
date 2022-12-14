@@ -1,3 +1,10 @@
+## [0.3.7](https://github.com/aliariff/vscode-erb-beautify/compare/v0.3.6...v0.3.7) (2022-12-14)
+
+
+### Bug Fixes
+
+* [#25](https://github.com/aliariff/vscode-erb-beautify/issues/25) ([#40](https://github.com/aliariff/vscode-erb-beautify/issues/40)) ([38300e6](https://github.com/aliariff/vscode-erb-beautify/commit/38300e66dfcc4346652c756bf33623e88af8533d))
+
 ## [0.3.6](https://github.com/aliariff/vscode-erb-beautify/compare/v0.3.5...v0.3.6) (2022-12-12)
 
 
