@@ -10,10 +10,6 @@ export default class HtmlBeautifier {
 
       const htmlbeautifier = cp.spawn(this.exe, this.cliOptions, {
         cwd: vscode.workspace.rootPath || __dirname,
-        env: {
-          ...process.env,
-          LC_ALL: "en_US.UTF-8",
-        },
       });
 
       if (htmlbeautifier.stdin === null || htmlbeautifier.stdout === null) {
