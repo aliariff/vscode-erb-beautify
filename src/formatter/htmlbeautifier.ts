@@ -10,7 +10,9 @@ export default class HtmlBeautifier {
    */
   public async format(data: string): Promise<string> {
     try {
-      const cmd = `${this.exe} ${this.cliOptions.join(" ")}`;
+      const cmd = `${this.exe} ${this.cliOptions.join(
+        " "
+      )} with custom env ${JSON.stringify(this.customEnvVars)}`;
       console.log(`Formatting ERB with command: ${cmd}`);
       console.time(cmd);
 
@@ -35,7 +37,7 @@ export default class HtmlBeautifier {
         cwd: vscode.workspace.rootPath || __dirname,
         env: {
           ...process.env,
-          LC_ALL: "en_US.UTF-8",
+          ...this.customEnvVars,
         },
       });
 
@@ -131,5 +133,18 @@ export default class HtmlBeautifier {
       }
       return acc;
     }, acc);
+  }
+
+  /**
+   * Retrieves the custom environment variables from the configuration
+   * @returns {Record<string, string>} The custom environment variables
+   */
+  private get customEnvVars(): Record<string, string> {
+    const config = vscode.workspace.getConfiguration("vscode-erb-beautify");
+    const customEnvVar = config.get("customEnvVar", {}) as Record<
+      string,
+      string
+    >;
+    return customEnvVar;
   }
 }

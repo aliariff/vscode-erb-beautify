@@ -50,6 +50,7 @@ NOTE: For you that have a filename with extension `.html.erb`, your file might b
 | `vscode-erb-beautify.indentBy`       | Indent the output by NUMBER steps                                                                                                | 0              |
 | `vscode-erb-beautify.stopOnErrors`   | Stop when invalid nesting is encountered in the input                                                                            | false          |
 | `vscode-erb-beautify.keepBlankLines` | Set number of consecutive blank lines                                                                                            | 0              |
+| `vscode-erb-beautify.customEnvVar`   | Custom environment variables to pass to the htmlbeautifier                                                                       | {}             |
 
 ## References
 

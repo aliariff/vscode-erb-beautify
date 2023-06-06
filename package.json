@@ -76,6 +76,11 @@
                     "type": "number",
                     "default": 0,
                     "description": "Set number of consecutive blank lines (default 0)"
+                },
+                "vscode-erb-beautify.customEnvVar": {
+                    "type": "object",
+                    "default": {},
+                    "description": "Custom environment variables to pass to the htmlbeautifier"
                 }
             }
         }
