@@ -1,9 +1,6 @@
 import * as assert from "assert";
 
-// You can import and use all API from the 'vscode' module
-// as well as import your extension to test it
 import * as vscode from "vscode";
-// import * as myExtension from '../../extension';
 
 suite("ERB Formatter/Beautify tests", () => {
   const FIXTURE = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -102,13 +99,23 @@ suite("ERB Formatter/Beautify tests", () => {
   const sleep = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
 
-  async function changeConfig(key: string, value: any) {
+  /**
+   * Changes the configuration value
+   * @param {string} key - The configuration key
+   * @param {any} value - The new value
+   * @returns {Promise<void>}
+   */
+  async function changeConfig(key: string, value: any): Promise<void> {
     await vscode.workspace
       .getConfiguration()
       .update(key, value, vscode.ConfigurationTarget.Global);
   }
 
-  async function formatWholeDocument() {
+  /**
+   * Formats the whole document and asserts the result
+   * @returns {Promise<void>}
+   */
+  async function formatWholeDocument(): Promise<void> {
     const document = await vscode.workspace.openTextDocument({
       language: "erb",
       content: FIXTURE,
@@ -120,7 +127,11 @@ suite("ERB Formatter/Beautify tests", () => {
     assert.strictEqual(document.getText(), CORRECT);
   }
 
-  async function formatSelectionDocument() {
+  /**
+   * Formats the selected range in the document and asserts the result
+   * @returns {Promise<void>}
+   */
+  async function formatSelectionDocument(): Promise<void> {
     const document = await vscode.workspace.openTextDocument({
       language: "erb",
       content: FIXTURE,
