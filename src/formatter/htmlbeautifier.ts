@@ -3,10 +3,15 @@ import * as cp from "child_process";
 const isWsl = require("is-wsl");
 
 export default class HtmlBeautifier {
+  /**
+   * Formats the given data using HTML Beautifier
+   * @param {string} data - The data to be formatted
+   * @returns {Promise<string>} The formatted data
+   */
   public format(data: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const cmd = `${this.exe} ${this.cliOptions.join(" ")}`;
-      console.log(`formatting erb with command: ${cmd}`);
+      console.log(`Formatting ERB with command: ${cmd}`);
       console.time(cmd);
 
       const htmlbeautifier = cp.spawn(this.exe, this.cliOptions, {
@@ -30,7 +35,7 @@ export default class HtmlBeautifier {
       htmlbeautifier.on("error", (err) => {
         console.warn(err);
         vscode.window.showErrorMessage(
-          `couldn't run ${this.exe} '${err.message}'`
+          `Couldn't run ${this.exe} '${err.message}'`
         );
         reject(err);
       });
@@ -43,7 +48,7 @@ export default class HtmlBeautifier {
       htmlbeautifier.on("exit", (code) => {
         if (code) {
           vscode.window.showErrorMessage(
-            `failed with exit code: ${code}. '${errorMessage}'`
+            `Failed with exit code: ${code}. '${errorMessage}'`
           );
           return reject();
         }
@@ -55,6 +60,10 @@ export default class HtmlBeautifier {
     });
   }
 
+  /**
+   * Returns the executable path for HTML Beautifier
+   * @returns {string} The executable path
+   */
   private get exe(): string {
     const config = vscode.workspace.getConfiguration("vscode-erb-beautify");
     const executePath = config.get("executePath", "htmlbeautifier");
@@ -64,6 +73,10 @@ export default class HtmlBeautifier {
     return useBundler ? `${bundlerPath}${ext}` : `${executePath}${ext}`;
   }
 
+  /**
+   * Returns the command-line options for HTML Beautifier
+   * @returns {string[]} The command-line options
+   */
   private get cliOptions(): string[] {
     const config = vscode.workspace.getConfiguration("vscode-erb-beautify");
     let acc: string[] = [];

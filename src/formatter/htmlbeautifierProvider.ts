@@ -12,6 +12,13 @@ export default class HtmlBeautifierProvider
     this.htmlbeautifier = new HtmlBeautifier();
   }
 
+  /**
+   * Provides formatting edits for the entire document
+   * @param {vscode.TextDocument} document - The document to be formatted
+   * @param {vscode.FormattingOptions} options - The formatting options
+   * @param {vscode.CancellationToken} token - The cancellation token
+   * @returns {vscode.ProviderResult<vscode.TextEdit[]>} The formatting edits
+   */
   public provideDocumentFormattingEdits(
     document: vscode.TextDocument,
     options: vscode.FormattingOptions,
@@ -33,6 +40,14 @@ export default class HtmlBeautifierProvider
     );
   }
 
+  /**
+   * Provides formatting edits for a specific range within the document
+   * @param {vscode.TextDocument} document - The document to be formatted
+   * @param {vscode.Range} range - The range to be formatted
+   * @param {vscode.FormattingOptions} options - The formatting options
+   * @param {vscode.CancellationToken} token - The cancellation token
+   * @returns {vscode.ProviderResult<vscode.TextEdit[]>} The formatting edits
+   */
   public provideDocumentRangeFormattingEdits(
     document: vscode.TextDocument,
     range: vscode.Range,
