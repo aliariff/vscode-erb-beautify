@@ -8,12 +8,29 @@ export default class HtmlBeautifier {
    * @param {string} data - The data to be formatted
    * @returns {Promise<string>} The formatted data
    */
-  public format(data: string): Promise<string> {
-    return new Promise((resolve, reject) => {
+  public async format(data: string): Promise<string> {
+    try {
       const cmd = `${this.exe} ${this.cliOptions.join(" ")}`;
       console.log(`Formatting ERB with command: ${cmd}`);
       console.time(cmd);
 
+      const result = await this.executeCommand(cmd, data);
+
+      console.timeEnd(cmd);
+      return result;
+    } catch (error) {
+      console.error(error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error occurred";
+      vscode.window.showErrorMessage(
+        `Error occurred while formatting: ${errorMessage}`
+      );
+      throw error;
+    }
+  }
+
+  private executeCommand(cmd: string, data: string): Promise<string> {
+    return new Promise((resolve, reject) => {
       const htmlbeautifier = cp.spawn(this.exe, this.cliOptions, {
         cwd: vscode.workspace.rootPath || __dirname,
         env: {
@@ -26,12 +43,13 @@ export default class HtmlBeautifier {
         const msg = "Couldn't initialize STDIN or STDOUT";
         console.warn(msg);
         vscode.window.showErrorMessage(msg);
-        reject(msg);
+        reject(new Error(msg));
         return;
       }
 
       let result = "";
       let errorMessage = "";
+
       htmlbeautifier.on("error", (err) => {
         console.warn(err);
         vscode.window.showErrorMessage(
@@ -39,22 +57,26 @@ export default class HtmlBeautifier {
         );
         reject(err);
       });
+
       htmlbeautifier.stdout.on("data", (data) => {
         result += data.toString();
       });
+
       htmlbeautifier.stderr.on("data", (data) => {
         errorMessage += data.toString();
       });
+
       htmlbeautifier.on("exit", (code) => {
         if (code) {
           vscode.window.showErrorMessage(
             `Failed with exit code: ${code}. '${errorMessage}'`
           );
-          return reject();
+          reject(new Error(`Command failed with exit code ${code}`));
+        } else {
+          resolve(result);
         }
-        console.timeEnd(cmd);
-        resolve(result);
       });
+
       htmlbeautifier.stdin.write(data);
       htmlbeautifier.stdin.end();
     });
@@ -79,7 +101,7 @@ export default class HtmlBeautifier {
    */
   private get cliOptions(): string[] {
     const config = vscode.workspace.getConfiguration("vscode-erb-beautify");
-    let acc: string[] = [];
+    const acc: string[] = [];
 
     if (config.get("useBundler")) {
       acc.push("exec", "htmlbeautifier");
