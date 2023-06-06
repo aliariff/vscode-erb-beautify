@@ -15,7 +15,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: "18"
       - name: Install Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -23,7 +23,6 @@ jobs:
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
       - name: Install dependencies
         run: |
-          npm i -g npm@7
           npm install
           gem install htmlbeautifier
       - name: Run headless test (${{ matrix.os }})
