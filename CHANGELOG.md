@@ -1,3 +1,10 @@
+# [0.4.0](https://github.com/aliariff/vscode-erb-beautify/compare/v0.3.8...v0.4.0) (2023-06-06)
+
+
+### Features
+
+* Add customEnvVar setting ([9d7d490](https://github.com/aliariff/vscode-erb-beautify/commit/9d7d4909c9d99db63a6030bc644012efe9a1c76f))
+
 ## [0.3.8](https://github.com/aliariff/vscode-erb-beautify/compare/v0.3.7...v0.3.8) (2022-12-14)
 
 
