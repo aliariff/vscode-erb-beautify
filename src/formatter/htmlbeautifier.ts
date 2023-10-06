@@ -1,8 +1,16 @@
-import * as vscode from "vscode";
 import * as cp from "child_process";
+import * as vscode from "vscode";
 const isWsl = require("is-wsl");
 
 export default class HtmlBeautifier {
+  private logger: vscode.OutputChannel;
+  private htmlbeautifier: cp.ChildProcessWithoutNullStreams;
+
+  constructor() {
+    this.logger = vscode.window.createOutputChannel("ERB Formatter/Beautify");
+    this.htmlbeautifier = this.initializeBeautifier();
+  }
+
   /**
    * Formats the given data using HTML Beautifier
    * @param {string} data - The data to be formatted
@@ -13,10 +21,10 @@ export default class HtmlBeautifier {
       const cmd = `${this.exe} ${this.cliOptions.join(
         " "
       )} with custom env ${JSON.stringify(this.customEnvVars)}`;
-      console.log(`Formatting ERB with command: ${cmd}`);
+      this.logger.appendLine(`Formatting ERB with command: ${cmd}`);
       console.time(cmd);
 
-      const result = await this.executeCommand(cmd, data);
+      const result = await this.executeCommand(data);
 
       console.timeEnd(cmd);
       return result;
@@ -31,30 +39,26 @@ export default class HtmlBeautifier {
     }
   }
 
-  private executeCommand(cmd: string, data: string): Promise<string> {
+  private initializeBeautifier(): cp.ChildProcessWithoutNullStreams {
+    const htmlbeautifier = cp.spawn(this.exe, this.cliOptions, {
+      cwd: vscode.workspace.rootPath || __dirname,
+      env: {
+        ...process.env,
+        ...this.customEnvVars,
+      },
+    });
+
+    return htmlbeautifier;
+  }
+
+  private executeCommand(data: string): Promise<string> {
     return new Promise((resolve, reject) => {
-      const htmlbeautifier = cp.spawn(this.exe, this.cliOptions, {
-        cwd: vscode.workspace.rootPath || __dirname,
-        env: {
-          ...process.env,
-          ...this.customEnvVars,
-        },
-      });
-
-      if (htmlbeautifier.stdin === null || htmlbeautifier.stdout === null) {
-        const msg = "Couldn't initialize STDIN or STDOUT";
-        console.warn(msg);
-        vscode.window.showErrorMessage(msg);
-        reject(new Error(msg));
-        return;
-      }
-
       let result = "";
       let errorMessage = "";
       let stdoutChunks: Buffer[] = [];
       let stderrChunks: Buffer[] = [];
 
-      htmlbeautifier.on("error", (err) => {
+      this.htmlbeautifier.on("error", (err) => {
         console.warn(err);
         vscode.window.showErrorMessage(
           `Couldn't run ${this.exe} '${err.message}'`
@@ -62,35 +66,30 @@ export default class HtmlBeautifier {
         reject(err);
       });
 
-      htmlbeautifier.stdout.on("data", (data) => {
+      this.htmlbeautifier.stdout.on("data", (data) => {
         stdoutChunks.push(data);
       });
-
-      htmlbeautifier.stdout.on("end", () => {
-        result = Buffer.concat(stdoutChunks).toString();
-      });
-
-      htmlbeautifier.stderr.on("data", (data) => {
+      this.htmlbeautifier.stderr.on("data", (data) => {
         stderrChunks.push(data);
       });
 
-      htmlbeautifier.stderr.on("end", () => {
-        errorMessage = Buffer.concat(stderrChunks).toString();
-      });
-
-      htmlbeautifier.on("exit", (code) => {
+      this.htmlbeautifier.on("exit", (code) => {
         if (code) {
           vscode.window.showErrorMessage(
             `Failed with exit code: ${code}. '${errorMessage}'`
           );
-          reject(new Error(`Command failed with exit code ${code}`));
+          errorMessage = Buffer.concat(stderrChunks).toString();
+          reject(new Error(errorMessage));
         } else {
+          result = Buffer.concat(stdoutChunks).toString();
           resolve(result);
         }
+        // Reinitialize htmlbeautifier after each operation
+        this.htmlbeautifier = this.initializeBeautifier();
       });
 
-      htmlbeautifier.stdin.write(data);
-      htmlbeautifier.stdin.end();
+      this.htmlbeautifier.stdin.write(data);
+      this.htmlbeautifier.stdin.end();
     });
   }
 
