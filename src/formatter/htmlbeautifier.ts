@@ -51,6 +51,8 @@ export default class HtmlBeautifier {
 
       let result = "";
       let errorMessage = "";
+      let stdoutChunks: Buffer[] = [];
+      let stderrChunks: Buffer[] = [];
 
       htmlbeautifier.on("error", (err) => {
         console.warn(err);
@@ -61,11 +63,19 @@ export default class HtmlBeautifier {
       });
 
       htmlbeautifier.stdout.on("data", (data) => {
-        result += data.toString();
+        stdoutChunks.push(data);
+      });
+
+      htmlbeautifier.stdout.on("end", () => {
+        result = Buffer.concat(stdoutChunks).toString();
       });
 
       htmlbeautifier.stderr.on("data", (data) => {
-        errorMessage += data.toString();
+        stderrChunks.push(data);
+      });
+
+      htmlbeautifier.stderr.on("end", () => {
+        errorMessage = Buffer.concat(stderrChunks).toString();
       });
 
       htmlbeautifier.on("exit", (code) => {

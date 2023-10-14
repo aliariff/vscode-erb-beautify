@@ -99,7 +99,7 @@ suite("ERB Formatter/Beautify tests", () => {
     );
   });
 
-  test.skip("formats without encoding issue", async () => {
+  test("formats without encoding issue", async () => {
     await formatAndAssert(
       "encoding_unformatted.html.erb",
       "encoding_formatted.html.erb"
