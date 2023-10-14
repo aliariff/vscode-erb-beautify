@@ -54,6 +54,11 @@ suite("ERB Formatter/Beautify tests", () => {
 
     await vscode.window.showTextDocument(document);
     await sleep(1500); // Allow time for the extension to load.
+
+    if (formatCommand === "editor.action.formatSelection") {
+      await vscode.commands.executeCommand("editor.action.selectAll");
+    }
+
     await vscode.commands.executeCommand(formatCommand);
     await sleep(500); // Allow time for the formatting to occur.
 
