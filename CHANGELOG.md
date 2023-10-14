@@ -1,3 +1,10 @@
+## [0.4.1](https://github.com/aliariff/vscode-erb-beautify/compare/v0.4.0...v0.4.1) (2023-10-14)
+
+
+### Bug Fixes
+
+* make release after resolving encoding issue [#46](https://github.com/aliariff/vscode-erb-beautify/issues/46) ([bc2914d](https://github.com/aliariff/vscode-erb-beautify/commit/bc2914d1f1faa39cccbfcff7413b8d75476231f6))
+
 # [0.4.0](https://github.com/aliariff/vscode-erb-beautify/compare/v0.3.8...v0.4.0) (2023-06-06)
 
 
