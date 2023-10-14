@@ -38,6 +38,18 @@ NOTE: For you that have a filename with extension `.html.erb`, your file might b
 }
 ```
 
+## Known Issues
+
+- `invalid byte sequence in US-ASCII`
+
+    Add below setting. [Reference](https://github.com/aliariff/vscode-erb-beautify/issues/47)
+
+    ```json
+    "vscode-erb-beautify.customEnvVar": {
+      "LC_ALL": "en_US.UTF-8"
+    }
+    ```
+
 ## Settings
 
 | Setting                              | Description                                                                                                                      | Default        |
