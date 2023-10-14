@@ -8,7 +8,7 @@ suite("ERB Formatter/Beautify tests", () => {
     new Promise((resolve) => setTimeout(resolve, ms));
 
   /**
-   * Reads the content of a test file located in the `data` directory.
+   * Reads the content of a test file located in the `fixtures` directory.
    *
    * @param {string} filename - The name of the file to be read.
    * @returns {string} - The content of the file in UTF-8 encoding.
