@@ -9,6 +9,13 @@ export default class HtmlBeautifier {
   constructor() {
     this.logger = vscode.window.createOutputChannel("ERB Formatter/Beautify");
     this.htmlbeautifier = this.initializeBeautifier();
+    vscode.workspace.onDidChangeConfiguration((event) => {
+      const isAffected = event.affectsConfiguration("vscode-erb-beautify");
+      if (!isAffected) {
+        return;
+      }
+      this.htmlbeautifier = this.initializeBeautifier();
+    });
   }
 
   /**
