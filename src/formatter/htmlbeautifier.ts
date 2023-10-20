@@ -24,6 +24,18 @@ export default class HtmlBeautifier {
    * @returns {Promise<string>} The formatted data
    */
   public async format(data: string): Promise<string> {
+    if (
+      this.htmlbeautifier === null ||
+      this.htmlbeautifier.stdin === null ||
+      this.htmlbeautifier.stdout === null
+    ) {
+      const msg =
+        "Couldn't initialize htmlbeautifier. Make sure the gem is installed and available in PATH.";
+      console.error(msg);
+      vscode.window.showErrorMessage(msg);
+      throw new Error(msg);
+    }
+
     try {
       const cmd = `${this.exe} ${this.cliOptions.join(
         " "
