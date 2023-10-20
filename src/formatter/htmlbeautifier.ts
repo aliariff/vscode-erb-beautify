@@ -14,6 +14,7 @@ export default class HtmlBeautifier {
       if (!isAffected) {
         return;
       }
+      this.htmlbeautifier.kill();
       this.htmlbeautifier = this.initializeBeautifier();
     });
   }
