@@ -94,15 +94,19 @@
         "test": "vscode-test"
     },
     "devDependencies": {
-        "@types/vscode": "^1.86.0",
+        "@semantic-release/changelog": "^6.0.3",
+        "@semantic-release/git": "^10.0.1",
         "@types/mocha": "^10.0.6",
         "@types/node": "18.x",
+        "@types/vscode": "^1.86.0",
         "@typescript-eslint/eslint-plugin": "^6.19.1",
         "@typescript-eslint/parser": "^6.19.1",
-        "eslint": "^8.56.0",
-        "typescript": "^5.3.3",
         "@vscode/test-cli": "^0.0.4",
-        "@vscode/test-electron": "^2.3.9"
+        "@vscode/test-electron": "^2.3.9",
+        "eslint": "^8.56.0",
+        "semantic-release": "^23.0.2",
+        "semantic-release-vsce": "^5.6.4",
+        "typescript": "^5.3.3"
     },
     "dependencies": {
         "is-wsl": "^3.1.0"
