@@ -4,11 +4,11 @@ const isWsl = require("is-wsl");
 
 export default class HtmlBeautifier {
   /**
-   * Formats the given data using HTML Beautifier
-   * @param {string} data - The data to be formatted
-   * @returns {Promise<string>} The formatted data
+   * Formats the given input using HTML Beautifier
+   * @param {string} input - The input to be formatted
+   * @returns {Promise<string>} The formatted input
    */
-  public async format(data: string): Promise<string> {
+  public async format(input: string): Promise<string> {
     try {
       const cmd = `${this.exe} ${this.cliOptions.join(
         " "
@@ -16,7 +16,7 @@ export default class HtmlBeautifier {
       console.log(`Formatting ERB with command: ${cmd}`);
       console.time(cmd);
 
-      const result = await this.executeCommand(cmd, data);
+      const result = await this.executeCommand(input);
 
       console.timeEnd(cmd);
       return result;
@@ -31,7 +31,7 @@ export default class HtmlBeautifier {
     }
   }
 
-  private executeCommand(cmd: string, data: string): Promise<string> {
+  private executeCommand(input: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const htmlbeautifier = cp.spawn(this.exe, this.cliOptions, {
         cwd: vscode.workspace.rootPath || __dirname,
@@ -49,7 +49,7 @@ export default class HtmlBeautifier {
         return;
       }
 
-      let result = "";
+      let formattedResult = "";
       let errorMessage = "";
       let stdoutChunks: Buffer[] = [];
       let stderrChunks: Buffer[] = [];
@@ -62,16 +62,16 @@ export default class HtmlBeautifier {
         reject(err);
       });
 
-      htmlbeautifier.stdout.on("data", (data) => {
-        stdoutChunks.push(data);
+      htmlbeautifier.stdout.on("data", (chunk) => {
+        stdoutChunks.push(chunk);
       });
 
       htmlbeautifier.stdout.on("end", () => {
-        result = Buffer.concat(stdoutChunks).toString();
+        formattedResult = Buffer.concat(stdoutChunks).toString();
       });
 
-      htmlbeautifier.stderr.on("data", (data) => {
-        stderrChunks.push(data);
+      htmlbeautifier.stderr.on("data", (chunk) => {
+        stderrChunks.push(chunk);
       });
 
       htmlbeautifier.stderr.on("end", () => {
@@ -85,11 +85,11 @@ export default class HtmlBeautifier {
           );
           reject(new Error(`Command failed with exit code ${code}`));
         } else {
-          resolve(result);
+          resolve(formattedResult);
         }
       });
 
-      htmlbeautifier.stdin.write(data);
+      htmlbeautifier.stdin.write(input);
       htmlbeautifier.stdin.end();
     });
   }
