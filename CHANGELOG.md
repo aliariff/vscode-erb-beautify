@@ -1,3 +1,10 @@
+## [0.4.2](https://github.com/aliariff/vscode-erb-beautify/compare/v0.4.1...v0.4.2) (2024-02-11)
+
+
+### Bug Fixes
+
+* [#52](https://github.com/aliariff/vscode-erb-beautify/issues/52) Handle new line ([#58](https://github.com/aliariff/vscode-erb-beautify/issues/58)) ([0dad617](https://github.com/aliariff/vscode-erb-beautify/commit/0dad617756d24eab3630e59b3e8338de9dedd606))
+
 ## [0.4.1](https://github.com/aliariff/vscode-erb-beautify/compare/v0.4.0...v0.4.1) (2023-10-14)
 
 
