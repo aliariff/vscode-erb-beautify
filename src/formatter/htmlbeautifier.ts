@@ -160,11 +160,10 @@ export default class HtmlBeautifier {
   }
 
   /**
-   * Handles the final newline of the result based on the configuration and the input.
+   * Adjusts the final newline of the result string based on the VS Code configuration and the input string.
    * If the configuration is set to insert a final newline and the result does not end with a newline, it appends a newline.
-   * If the configuration is not set to insert a final newline, it follows the input's ending:
-   * - If the input ends with a newline and the result does not, it appends a newline.
-   * - If the input does not end with a newline and the result does, it removes the newline.
+   * The type of newline appended depends on the 'files.eol' setting and the platform.
+   * If the configuration is not set to insert a final newline, it adjusts the result's ending to match the input's ending.
    * @param {string} input - The original input string.
    * @param {string} result - The result string to be processed.
    * @returns {string} The processed result string.
@@ -196,6 +195,12 @@ export default class HtmlBeautifier {
     return result;
   }
 
+  /**
+   * Determines the type of newline used in the input string.
+   * This function considers both Unix-style (\n) and Windows-style (\r\n) newlines, as well as no newline.
+   * @param {string} input - The input string.
+   * @returns {string} The newline character(s) used in the input string, or an empty string if the input does not end with a newline.
+   */
   private getNewline(input: string): string {
     if (input.endsWith("\r\n")) {
       return "\r\n";
