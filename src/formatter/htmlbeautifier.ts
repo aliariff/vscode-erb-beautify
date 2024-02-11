@@ -104,7 +104,6 @@ export default class HtmlBeautifier {
     const useBundler = config.get("useBundler", false);
     const bundlerPath = config.get("bundlerPath", "bundle");
     const ext = process.platform === "win32" && !isWsl ? ".bat" : "";
-    console.log(`Platform: ${process.platform}, isWsl: ${isWsl}`);
     return useBundler ? `${bundlerPath}${ext}` : `${executePath}${ext}`;
   }
 
