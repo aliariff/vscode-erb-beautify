@@ -67,7 +67,8 @@ export default class HtmlBeautifier {
       });
 
       htmlbeautifier.stdout.on("end", () => {
-        formattedResult = Buffer.concat(stdoutChunks).toString();
+        let result = Buffer.concat(stdoutChunks).toString();
+        formattedResult = this.handleFinalNewline(input, result);
       });
 
       htmlbeautifier.stderr.on("data", (chunk) => {
@@ -156,5 +157,23 @@ export default class HtmlBeautifier {
       string
     >;
     return customEnvVar;
+  }
+
+  private handleFinalNewline(input: string, result: string): string {
+    const insertFinalNewline = vscode.workspace
+      .getConfiguration()
+      .get("files.insertFinalNewline");
+
+    if (insertFinalNewline && !result.endsWith("\n")) {
+      result += "\n";
+    } else if (!insertFinalNewline) {
+      if (input.endsWith("\n") && !result.endsWith("\n")) {
+        result += "\n";
+      } else if (!input.endsWith("\n") && result.endsWith("\n")) {
+        result = result.slice(0, -1);
+      }
+    }
+
+    return result;
   }
 }
