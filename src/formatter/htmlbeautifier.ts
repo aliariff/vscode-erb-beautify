@@ -159,6 +159,16 @@ export default class HtmlBeautifier {
     return customEnvVar;
   }
 
+  /**
+   * Handles the final newline of the result based on the configuration and the input.
+   * If the configuration is set to insert a final newline and the result does not end with a newline, it appends a newline.
+   * If the configuration is not set to insert a final newline, it follows the input's ending:
+   * - If the input ends with a newline and the result does not, it appends a newline.
+   * - If the input does not end with a newline and the result does, it removes the newline.
+   * @param {string} input - The original input string.
+   * @param {string} result - The result string to be processed.
+   * @returns {string} The processed result string.
+   */
   private handleFinalNewline(input: string, result: string): string {
     const insertFinalNewline = vscode.workspace
       .getConfiguration()
