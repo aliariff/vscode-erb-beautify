@@ -4,11 +4,11 @@ const isWsl = require("is-wsl");
 
 export default class HtmlBeautifier {
   /**
-   * Formats the given data using HTML Beautifier
-   * @param {string} data - The data to be formatted
-   * @returns {Promise<string>} The formatted data
+   * Formats the given input using HTML Beautifier
+   * @param {string} input - The input to be formatted
+   * @returns {Promise<string>} The formatted input
    */
-  public async format(data: string): Promise<string> {
+  public async format(input: string): Promise<string> {
     try {
       const cmd = `${this.exe} ${this.cliOptions.join(
         " "
@@ -16,7 +16,7 @@ export default class HtmlBeautifier {
       console.log(`Formatting ERB with command: ${cmd}`);
       console.time(cmd);
 
-      const result = await this.executeCommand(cmd, data);
+      const result = await this.executeCommand(input);
 
       console.timeEnd(cmd);
       return result;
@@ -31,7 +31,7 @@ export default class HtmlBeautifier {
     }
   }
 
-  private executeCommand(cmd: string, data: string): Promise<string> {
+  private executeCommand(input: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const htmlbeautifier = cp.spawn(this.exe, this.cliOptions, {
         cwd: vscode.workspace.rootPath || __dirname,
@@ -49,7 +49,7 @@ export default class HtmlBeautifier {
         return;
       }
 
-      let result = "";
+      let formattedResult = "";
       let errorMessage = "";
       let stdoutChunks: Buffer[] = [];
       let stderrChunks: Buffer[] = [];
@@ -62,16 +62,17 @@ export default class HtmlBeautifier {
         reject(err);
       });
 
-      htmlbeautifier.stdout.on("data", (data) => {
-        stdoutChunks.push(data);
+      htmlbeautifier.stdout.on("data", (chunk) => {
+        stdoutChunks.push(chunk);
       });
 
       htmlbeautifier.stdout.on("end", () => {
-        result = Buffer.concat(stdoutChunks).toString();
+        let result = Buffer.concat(stdoutChunks).toString();
+        formattedResult = this.handleFinalNewline(input, result);
       });
 
-      htmlbeautifier.stderr.on("data", (data) => {
-        stderrChunks.push(data);
+      htmlbeautifier.stderr.on("data", (chunk) => {
+        stderrChunks.push(chunk);
       });
 
       htmlbeautifier.stderr.on("end", () => {
@@ -85,11 +86,11 @@ export default class HtmlBeautifier {
           );
           reject(new Error(`Command failed with exit code ${code}`));
         } else {
-          resolve(result);
+          resolve(formattedResult);
         }
       });
 
-      htmlbeautifier.stdin.write(data);
+      htmlbeautifier.stdin.write(input);
       htmlbeautifier.stdin.end();
     });
   }
@@ -156,5 +157,73 @@ export default class HtmlBeautifier {
       string
     >;
     return customEnvVar;
+  }
+
+  /**
+   * Adjusts the final newline of the result string based on the VS Code configuration and the input string.
+   * @param {string} input - The original input string.
+   * @param {string} result - The result string to be processed.
+   * @returns {string} The processed result string.
+   */
+  private handleFinalNewline(input: string, result: string): string {
+    // Get the 'insertFinalNewline' setting from VS Code configuration
+    const insertFinalNewline = vscode.workspace
+      .getConfiguration()
+      .get("files.insertFinalNewline");
+
+    // Check if the result string ends with a newline
+    const resultEndsWithNewline =
+      result.endsWith("\n") || result.endsWith("\r\n");
+
+    // If 'insertFinalNewline' is true and the result does not end with a newline
+    if (insertFinalNewline && !resultEndsWithNewline) {
+      // Get the 'files.eol' setting from VS Code configuration
+      const eol = vscode.workspace.getConfiguration().get("files.eol");
+
+      // Set the newline character(s) based on the 'files.eol' setting and the platform
+      let newline = eol;
+      if (eol === "auto") {
+        newline = process.platform === "win32" ? "\r\n" : "\n";
+      }
+
+      // Append the newline to the result
+      result += newline;
+    } else if (!insertFinalNewline) {
+      // If 'insertFinalNewline' is false, adjust the result's ending to match the input's ending
+
+      // Get the newline character(s) used in the input and result
+      const inputNewline = this.getNewline(input);
+      const resultNewline = this.getNewline(result);
+
+      // If the input and result use different newline character(s)
+      if (inputNewline !== resultNewline) {
+        // Remove the newline from the end of the result
+        result = result.slice(0, -resultNewline.length);
+
+        // Append the newline from the input to the result
+        result += inputNewline;
+      }
+    }
+
+    // Return the processed result
+    return result;
+  }
+
+  /**
+   * Determines the type of newline used in the input string.
+   * @param {string} input - The input string.
+   * @returns {string} The newline character(s) used in the input string, or an empty string if the input does not end with a newline.
+   */
+  private getNewline(input: string): string {
+    // If the input ends with a Windows-style newline, return '\r\n'
+    if (input.endsWith("\r\n")) {
+      return "\r\n";
+    }
+    // If the input ends with a Unix-style newline, return '\n'
+    else if (input.endsWith("\n")) {
+      return "\n";
+    }
+    // If the input does not end with a newline, return an empty string
+    return "";
   }
 }
