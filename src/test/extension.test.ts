@@ -13,7 +13,7 @@ suite("ERB Formatter/Beautify tests", () => {
    * @returns The full path of the test file.
    */
   function resolveTestFilePath(filename: string): string {
-    return path.resolve(__dirname, "../../../", "src/test/fixtures/", filename);
+    return path.resolve(__dirname, "../../", "src/test/fixtures/", filename);
   }
 
   /**
