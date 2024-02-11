@@ -109,6 +109,6 @@
         "typescript": "^5.3.3"
     },
     "dependencies": {
-        "is-wsl": "^3.1.0"
+        "is-wsl": "^2.2.0"
     }
 }
