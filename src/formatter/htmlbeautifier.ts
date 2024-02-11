@@ -174,16 +174,34 @@ export default class HtmlBeautifier {
       .getConfiguration()
       .get("files.insertFinalNewline");
 
-    if (insertFinalNewline && !result.endsWith("\n")) {
-      result += "\n";
+    const resultEndsWithNewline =
+      result.endsWith("\n") || result.endsWith("\r\n");
+
+    if (insertFinalNewline && !resultEndsWithNewline) {
+      const eol = vscode.workspace.getConfiguration().get("files.eol");
+      let newline = eol;
+      if (eol === "auto") {
+        newline = process.platform === "win32" ? "\r\n" : "\n";
+      }
+      result += newline;
     } else if (!insertFinalNewline) {
-      if (input.endsWith("\n") && !result.endsWith("\n")) {
-        result += "\n";
-      } else if (!input.endsWith("\n") && result.endsWith("\n")) {
-        result = result.slice(0, -1);
+      const inputNewline = this.getNewline(input);
+      const resultNewline = this.getNewline(result);
+      if (inputNewline !== resultNewline) {
+        result = result.slice(0, -resultNewline.length);
+        result += inputNewline;
       }
     }
 
     return result;
+  }
+
+  private getNewline(input: string): string {
+    if (input.endsWith("\r\n")) {
+      return "\r\n";
+    } else if (input.endsWith("\n")) {
+      return "\n";
+    }
+    return "";
   }
 }
