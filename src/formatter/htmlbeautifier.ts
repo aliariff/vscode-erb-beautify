@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import * as cp from "child_process";
-const isWsl = import("is-wsl");
+const isWsl = require("is-wsl");
 
 export default class HtmlBeautifier {
   /**
