@@ -161,52 +161,69 @@ export default class HtmlBeautifier {
 
   /**
    * Adjusts the final newline of the result string based on the VS Code configuration and the input string.
-   * If the configuration is set to insert a final newline and the result does not end with a newline, it appends a newline.
-   * The type of newline appended depends on the 'files.eol' setting and the platform.
-   * If the configuration is not set to insert a final newline, it adjusts the result's ending to match the input's ending.
    * @param {string} input - The original input string.
    * @param {string} result - The result string to be processed.
    * @returns {string} The processed result string.
    */
   private handleFinalNewline(input: string, result: string): string {
+    // Get the 'insertFinalNewline' setting from VS Code configuration
     const insertFinalNewline = vscode.workspace
       .getConfiguration()
       .get("files.insertFinalNewline");
 
+    // Check if the result string ends with a newline
     const resultEndsWithNewline =
       result.endsWith("\n") || result.endsWith("\r\n");
 
+    // If 'insertFinalNewline' is true and the result does not end with a newline
     if (insertFinalNewline && !resultEndsWithNewline) {
+      // Get the 'files.eol' setting from VS Code configuration
       const eol = vscode.workspace.getConfiguration().get("files.eol");
+
+      // Set the newline character(s) based on the 'files.eol' setting and the platform
       let newline = eol;
       if (eol === "auto") {
         newline = process.platform === "win32" ? "\r\n" : "\n";
       }
+
+      // Append the newline to the result
       result += newline;
     } else if (!insertFinalNewline) {
+      // If 'insertFinalNewline' is false, adjust the result's ending to match the input's ending
+
+      // Get the newline character(s) used in the input and result
       const inputNewline = this.getNewline(input);
       const resultNewline = this.getNewline(result);
+
+      // If the input and result use different newline character(s)
       if (inputNewline !== resultNewline) {
+        // Remove the newline from the end of the result
         result = result.slice(0, -resultNewline.length);
+
+        // Append the newline from the input to the result
         result += inputNewline;
       }
     }
 
+    // Return the processed result
     return result;
   }
 
   /**
    * Determines the type of newline used in the input string.
-   * This function considers both Unix-style (\n) and Windows-style (\r\n) newlines, as well as no newline.
    * @param {string} input - The input string.
    * @returns {string} The newline character(s) used in the input string, or an empty string if the input does not end with a newline.
    */
   private getNewline(input: string): string {
+    // If the input ends with a Windows-style newline, return '\r\n'
     if (input.endsWith("\r\n")) {
       return "\r\n";
-    } else if (input.endsWith("\n")) {
+    }
+    // If the input ends with a Unix-style newline, return '\n'
+    else if (input.endsWith("\n")) {
       return "\n";
     }
+    // If the input does not end with a newline, return an empty string
     return "";
   }
 }
