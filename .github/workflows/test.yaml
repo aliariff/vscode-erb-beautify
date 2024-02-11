@@ -26,10 +26,11 @@ jobs:
           windows-toolchain: "default"
       - name: Install dependencies
         run: |
-          echo $PATH
           npm install
           gem install htmlbeautifier
           echo $PATH
+          which htmlbeautifier
+          which bundler
         shell: bash
       - name: Run headless test (${{ matrix.os }})
         run: xvfb-run -a npm test
