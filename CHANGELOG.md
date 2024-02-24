@@ -1,3 +1,10 @@
+## [0.4.3](https://github.com/aliariff/vscode-erb-beautify/compare/v0.4.2...v0.4.3) (2024-02-24)
+
+
+### Bug Fixes
+
+* [#59](https://github.com/aliariff/vscode-erb-beautify/issues/59) - Support older vscode ([#60](https://github.com/aliariff/vscode-erb-beautify/issues/60)) ([c9f6114](https://github.com/aliariff/vscode-erb-beautify/commit/c9f6114a8c4afc69fa1e4d60259a01da86a70340))
+
 ## [0.4.2](https://github.com/aliariff/vscode-erb-beautify/compare/v0.4.1...v0.4.2) (2024-02-11)
 
 
