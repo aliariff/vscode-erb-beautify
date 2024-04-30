@@ -8,11 +8,17 @@ import HtmlBeautifierProvider from "./formatter/htmlbeautifierProvider";
 export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
     vscode.languages.registerDocumentFormattingEditProvider(
-      "erb",
+      {
+        language: "erb",
+        pattern: "**/*.html.erb",
+      },
       new HtmlBeautifierProvider()
     ),
     vscode.languages.registerDocumentRangeFormattingEditProvider(
-      "erb",
+      {
+        language: "erb",
+        pattern: "**/*.html.erb",
+      },
       new HtmlBeautifierProvider()
     )
   );
