@@ -97,17 +97,17 @@
     "devDependencies": {
         "@semantic-release/changelog": "^6.0.3",
         "@semantic-release/git": "^10.0.1",
-        "@types/mocha": "^10.0.6",
-        "@types/node": "18.x",
+        "@types/mocha": "^10.0.7",
+        "@types/node": "20.x",
         "@types/vscode": "^1.80.0",
-        "@typescript-eslint/eslint-plugin": "^6.19.1",
-        "@typescript-eslint/parser": "^6.19.1",
-        "@vscode/test-cli": "^0.0.4",
-        "@vscode/test-electron": "^2.3.9",
-        "eslint": "^8.56.0",
+        "@typescript-eslint/eslint-plugin": "^7.14.1",
+        "@typescript-eslint/parser": "^7.11.0",
+        "@vscode/test-cli": "^0.0.9",
+        "@vscode/test-electron": "^2.4.0",
+        "eslint": "^8.57.0",
         "semantic-release": "^23.0.2",
         "semantic-release-vsce": "^5.6.4",
-        "typescript": "^5.3.3"
+        "typescript": "^5.4.5"
     },
     "dependencies": {
         "is-wsl": "^2.2.0"
