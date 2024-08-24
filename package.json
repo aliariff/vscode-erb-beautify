@@ -3,6 +3,7 @@
     "displayName": "ERB Formatter/Beautify",
     "description": "Format/Beautify ERB files",
     "version": "0.4.3",
+    "icon": "images/icon.png",
     "publisher": "aliariff",
     "license": "MIT",
     "bugs": "https://github.com/aliariff/vscode-erb-beautify/issues",
