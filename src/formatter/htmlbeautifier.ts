@@ -33,12 +33,15 @@ export default class HtmlBeautifier {
 
   private executeCommand(input: string): Promise<string> {
     return new Promise((resolve, reject) => {
+      // Handle spawn EINVAL error on Windows. See https://github.com/nodejs/node/issues/52554
+      const shellOptions = this.isWindows() ? { shell: true } : {};
       const htmlbeautifier = cp.spawn(this.exe, this.cliOptions, {
         cwd: vscode.workspace.rootPath || __dirname,
         env: {
           ...process.env,
           ...this.customEnvVars,
         },
+        ...shellOptions,
       });
 
       if (htmlbeautifier.stdin === null || htmlbeautifier.stdout === null) {
@@ -104,8 +107,16 @@ export default class HtmlBeautifier {
     const executePath = config.get("executePath", "htmlbeautifier");
     const useBundler = config.get("useBundler", false);
     const bundlerPath = config.get("bundlerPath", "bundle");
-    const ext = process.platform === "win32" && !isWsl ? ".bat" : "";
+    const ext = this.isWindows() ? ".bat" : "";
     return useBundler ? `${bundlerPath}${ext}` : `${executePath}${ext}`;
+  }
+
+  /**
+   * Determines if the current platform is Windows (excluding WSL)
+   * @returns {boolean} True if the platform is Windows, false otherwise
+   */
+  private isWindows(): boolean {
+    return process.platform === "win32" && !isWsl;
   }
 
   /**
