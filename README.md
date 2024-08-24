@@ -71,3 +71,7 @@ NOTE: For you that have a filename with extension `.html.erb`, your file might b
 [Issue](https://github.com/rubyide/vscode-ruby/issues/56)
 
 [Ref](https://medium.com/@costa.alexoglou/enable-formatting-with-erb-files-in-vscode-d4b4ff537017)
+
+## Credits
+
+- Icon made by [rootedbox](https://github.com/aliariff/vscode-erb-beautify/pull/65)
