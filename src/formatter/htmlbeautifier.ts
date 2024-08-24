@@ -194,7 +194,7 @@ export default class HtmlBeautifier {
       // Set the newline character(s) based on the 'files.eol' setting and the platform
       let newline = eol;
       if (eol === "auto") {
-        newline = process.platform === "win32" ? "\r\n" : "\n";
+        newline = this.isWindows() ? "\r\n" : "\n";
       }
 
       // Append the newline to the result
