@@ -2,7 +2,7 @@
     "name": "vscode-erb-beautify",
     "displayName": "ERB Formatter/Beautify",
     "description": "Format/Beautify ERB files",
-    "version": "0.4.3",
+    "version": "0.4.4",
     "icon": "images/icon.png",
     "publisher": "aliariff",
     "license": "MIT",

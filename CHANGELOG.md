@@ -1,3 +1,10 @@
+## [0.4.4](https://github.com/aliariff/vscode-erb-beautify/compare/v0.4.3...v0.4.4) (2024-08-24)
+
+
+### Bug Fixes
+
+* trigger release ([d158eb0](https://github.com/aliariff/vscode-erb-beautify/commit/d158eb035546aa030c4c25ac846b6f4b2d5e3f4f))
+
 ## [0.4.3](https://github.com/aliariff/vscode-erb-beautify/compare/v0.4.2...v0.4.3) (2024-02-24)
 
 
