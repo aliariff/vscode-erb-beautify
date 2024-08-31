@@ -25,10 +25,10 @@ export default class HtmlBeautifierProvider
     options: vscode.FormattingOptions,
     token: vscode.CancellationToken
   ): vscode.ProviderResult<vscode.TextEdit[]> {
-    return this.formatDocument(
-      document,
-      new vscode.Range(0, 0, Infinity, Infinity)
-    );
+    const start = new vscode.Position(0, 0); // Start at the beginning of the document.
+    const end = document.lineAt(document.lineCount - 1).range.end; // End at the last line of the document.
+    const range = new vscode.Range(start, end); // Range for the entire document.
+    return this.formatDocument(document, range); // Format the entire document.
   }
 
   /**
