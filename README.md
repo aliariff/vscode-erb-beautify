@@ -52,17 +52,18 @@ NOTE: For you that have a filename with extension `.html.erb`, your file might b
 
 ## Settings
 
-| Setting                              | Description                                                                                                                      | Default        |
-| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------- | -------------- |
-| `vscode-erb-beautify.executePath`    | Path to the htmlbeautifier executable, set this to absolute path when you have different htmlbeautifier location                 | htmlbeautifier |
-| `vscode-erb-beautify.useBundler`     | Execute htmlbeautifier using bundler (ie 'bundle exec htmlbeautifier'). If this true, vscode-erb-beautify.executePath is ignored | false          |
-| `vscode-erb-beautify.bundlerPath`    | Path to the bundler executable, set this to absolute path when you have different bundler location                               | bundle         |
-| `vscode-erb-beautify.tabStops`       | Set number of spaces per indent                                                                                                  | 2              |
-| `vscode-erb-beautify.tab`            | Indent using tabs                                                                                                                | false          |
-| `vscode-erb-beautify.indentBy`       | Indent the output by NUMBER steps                                                                                                | 0              |
-| `vscode-erb-beautify.stopOnErrors`   | Stop when invalid nesting is encountered in the input                                                                            | false          |
-| `vscode-erb-beautify.keepBlankLines` | Set number of consecutive blank lines                                                                                            | 0              |
-| `vscode-erb-beautify.customEnvVar`   | Custom environment variables to pass to the htmlbeautifier                                                                       | {}             |
+| Setting                                        | Description                                                                                                                      | Default        |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| `vscode-erb-beautify.executePath`              | Path to the htmlbeautifier executable, set this to absolute path when you have different htmlbeautifier location                 | htmlbeautifier |
+| `vscode-erb-beautify.useBundler`               | Execute htmlbeautifier using bundler (ie 'bundle exec htmlbeautifier'). If this true, vscode-erb-beautify.executePath is ignored | false          |
+| `vscode-erb-beautify.bundlerPath`              | Path to the bundler executable, set this to absolute path when you have different bundler location                               | bundle         |
+| `vscode-erb-beautify.tabStops`                 | Set number of spaces per indent                                                                                                  | 2              |
+| `vscode-erb-beautify.tab`                      | Indent using tabs                                                                                                                | false          |
+| `vscode-erb-beautify.indentBy`                 | Indent the output by NUMBER steps                                                                                                | 0              |
+| `vscode-erb-beautify.stopOnErrors`             | Stop when invalid nesting is encountered in the input                                                                            | false          |
+| `vscode-erb-beautify.keepBlankLines`           | Set number of consecutive blank lines                                                                                            | 0              |
+| `vscode-erb-beautify.customEnvVar`             | Custom environment variables to pass to the htmlbeautifier                                                                       | {}             |
+| `vscode-erb-beautify.ignoreFormatFilePatterns` | Ignore formatting for files matching these patterns                                                                              | []             |
 
 ## References
 
