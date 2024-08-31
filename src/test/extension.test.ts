@@ -32,6 +32,7 @@ suite("ERB Formatter/Beautify Tests", () => {
    * Changes a specific configuration value.
    * @param key - The configuration key.
    * @param value - The new value to set.
+   * @returns A promise that resolves after the configuration is updated.
    */
   const changeConfig = async (key: string, value: any): Promise<void> => {
     await vscode.workspace
@@ -44,6 +45,7 @@ suite("ERB Formatter/Beautify Tests", () => {
    * @param initialFile - The initial unformatted file name.
    * @param expectedFile - The expected formatted file name.
    * @param formatCommand - The vscode command to execute for formatting.
+   * @returns A promise that resolves after the document is formatted and asserted.
    */
   const formatAndAssert = async (
     initialFile: string,
@@ -73,6 +75,9 @@ suite("ERB Formatter/Beautify Tests", () => {
 
   /**
    * Runs a series of formatting tests with various configurations.
+   * @param useBundler - Whether to use bundler for formatting.
+   * @param formatSelection - Whether to format the selection instead of the whole document.
+   * @returns A promise that resolves after the tests are executed.
    */
   const runFormattingTests = async (
     useBundler: boolean,
