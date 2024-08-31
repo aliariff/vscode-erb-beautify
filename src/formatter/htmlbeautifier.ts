@@ -75,36 +75,18 @@ export default class HtmlBeautifier {
         const formattedResult = Buffer.concat(stdoutChunks).toString();
         const finalResult = this.handleFinalNewline(input, formattedResult);
         const errorMessage = Buffer.concat(stderrChunks).toString();
-        this.handleExit(code, finalResult, errorMessage, resolve, reject);
+        if (code && code !== 0) {
+          const error = `Failed with exit code ${code}. ${errorMessage}`;
+          this.handleError(error);
+          reject(error);
+        } else {
+          resolve(finalResult);
+        }
       });
 
       htmlbeautifier.stdin.write(input);
       htmlbeautifier.stdin.end();
     });
-  }
-
-  /**
-   * Handles the process exit event and resolves or rejects the promise.
-   * @param code The process exit code.
-   * @param result The formatted result.
-   * @param errorMessage The error message, if any.
-   * @param resolve The promise resolve function.
-   * @param reject The promise reject function.
-   */
-  private handleExit(
-    code: number | null,
-    result: string,
-    errorMessage: string,
-    resolve: (value: string | PromiseLike<string>) => void,
-    reject: (reason?: any) => void
-  ): void {
-    if (code && code !== 0) {
-      const error = `Failed with exit code ${code}. ${errorMessage}`;
-      this.handleError(error);
-      reject(error);
-    } else {
-      resolve(result);
-    }
   }
 
   /**
