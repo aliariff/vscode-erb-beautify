@@ -65,11 +65,13 @@ export default class HtmlBeautifierProvider
 
     return this.htmlbeautifier.format(document.getText(range)).then(
       (result) => [new vscode.TextEdit(range, result)],
-      (err) => {
-        this.htmlbeautifier.logChannel.error(
-          `Error formatting ${document.fileName}:`,
-          err
-        );
+      (error) => {
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        const shortFileName = document.fileName.split("/").pop();
+        const fullMessage = `Error formatting ${shortFileName}: ${errorMessage}`;
+        this.htmlbeautifier.logChannel.error(fullMessage);
+        vscode.window.showErrorMessage(fullMessage);
         return [];
       }
     );

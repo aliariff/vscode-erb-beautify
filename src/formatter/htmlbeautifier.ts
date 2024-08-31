@@ -17,18 +17,11 @@ export default class HtmlBeautifier {
    * @returns A promise that resolves to the formatted string.
    */
   public async format(input: string): Promise<string> {
-    try {
-      const startTime = Date.now();
-      const result = await this.executeCommand(input);
-      const duration = Date.now() - startTime;
-      this.logChannel.info(
-        `Formatting completed successfully in ${duration}ms.`
-      );
-      return result;
-    } catch (error) {
-      this.handleError(error);
-      throw error;
-    }
+    const startTime = Date.now();
+    const result = await this.executeCommand(input);
+    const duration = Date.now() - startTime;
+    this.logChannel.info(`Formatting completed successfully in ${duration}ms.`);
+    return result;
   }
 
   /**
@@ -55,9 +48,7 @@ export default class HtmlBeautifier {
       this.logChannel.info(`Formatting ERB with command: ${fullCommand}`);
 
       if (!htmlbeautifier.stdin || !htmlbeautifier.stdout) {
-        const error = "Failed to spawn process, missing stdin/stdout";
-        this.handleError(error);
-        reject(error);
+        reject("Failed to spawn process, missing stdin/stdout");
       }
 
       const stdoutChunks: Buffer[] = [];
@@ -67,7 +58,6 @@ export default class HtmlBeautifier {
       htmlbeautifier.stderr.on("data", (chunk) => stderrChunks.push(chunk));
 
       htmlbeautifier.on("error", (error) => {
-        this.handleError(error);
         reject(error);
       });
 
@@ -76,9 +66,7 @@ export default class HtmlBeautifier {
         const finalResult = this.handleFinalNewline(input, formattedResult);
         const errorMessage = Buffer.concat(stderrChunks).toString();
         if (code && code !== 0) {
-          const error = `Failed with exit code ${code}. ${errorMessage}`;
-          this.handleError(error);
-          reject(error);
+          reject(`Failed with exit code ${code}. ${errorMessage}`);
         } else {
           resolve(finalResult);
         }
@@ -87,17 +75,6 @@ export default class HtmlBeautifier {
       htmlbeautifier.stdin.write(input);
       htmlbeautifier.stdin.end();
     });
-  }
-
-  /**
-   * Handles errors by logging and displaying a message to the user.
-   * @param error The error object or message.
-   */
-  private handleError(error: any): void {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    const fullMessage = `Error formatting ERB: ${errorMessage}`;
-    this.logChannel.error(fullMessage);
-    vscode.window.showErrorMessage(fullMessage);
   }
 
   /**
