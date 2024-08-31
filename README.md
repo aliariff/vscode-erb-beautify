@@ -80,7 +80,7 @@ This configuration ignores all `.erb` files inside the `email_templates` directo
 
 ### Fixing Encoding Issues
 
-If you encounter the "Invalid byte sequence in US-ASCII" error, add the following setting to your `settings.json` to set the correct locale:
+If you encounter the `Invalid byte sequence in US-ASCII` error, add the following setting to your `settings.json` to set the correct locale:
 
 ```json
 "vscode-erb-beautify.customEnvVar": {
