@@ -47,10 +47,9 @@ suite("ERB Formatter/Beautify tests", () => {
     expectedFile: string,
     formatCommand: string = "editor.action.formatDocument"
   ): Promise<void> {
-    const document = await vscode.workspace.openTextDocument({
-      language: "erb",
-      content: readTestFile(initialFile),
-    });
+    const document = await vscode.workspace.openTextDocument(
+      resolveTestFilePath(initialFile)
+    );
 
     await vscode.window.showTextDocument(document);
     await sleep(1500); // Allow time for the extension to load.
@@ -136,5 +135,13 @@ suite("ERB Formatter/Beautify tests", () => {
       "with_final_newline.html.erb",
       "with_final_newline.html.erb"
     );
+  });
+
+  test("Ignores formatting for files matching ignore patterns", async () => {
+    await changeConfig("vscode-erb-beautify.ignoreFormatFilePatterns", [
+      "**/*.text.erb",
+    ]);
+
+    await formatAndAssert("ignored_file.text.erb", "ignored_file.text.erb");
   });
 });
