@@ -62,14 +62,26 @@ export default class HtmlBeautifier {
       });
 
       htmlbeautifier.on("exit", (code) => {
+        const errorMessage = Buffer.concat(stderrChunks).toString().trim();
+
+        // Handle non-zero exit codes as errors
+        if (code !== 0) {
+          return reject(
+            `Formatting failed with exit code ${code}: ${errorMessage}`
+          );
+        }
+
+        // Handle case where output is empty but input was not
         const formattedResult = Buffer.concat(stdoutChunks).toString();
         const finalResult = this.handleFinalNewline(input, formattedResult);
-        const errorMessage = Buffer.concat(stderrChunks).toString();
-        if (code && code !== 0) {
-          reject(`Failed with exit code ${code}. ${errorMessage}`);
-        } else {
-          resolve(finalResult);
+        if (input.trim() && finalResult.trim() === "") {
+          return reject(
+            `Formatting failed: the output is unexpectedly empty despite non-empty input. ${errorMessage}`
+          );
         }
+
+        // If no errors, resolve with the formatted result
+        resolve(finalResult);
       });
 
       htmlbeautifier.stdin.write(input);
