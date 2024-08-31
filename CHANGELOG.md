@@ -1,3 +1,10 @@
+# [0.5.0](https://github.com/aliariff/vscode-erb-beautify/compare/v0.4.4...v0.5.0) (2024-08-31)
+
+
+### Features
+
+* Add config to ignore formatting specific files ([#72](https://github.com/aliariff/vscode-erb-beautify/issues/72)), Mitigate empty output issue ([#74](https://github.com/aliariff/vscode-erb-beautify/issues/74)) ([334b837](https://github.com/aliariff/vscode-erb-beautify/commit/334b837db2ece02c04aa9b5121351f6e399bf726))
+
 ## [0.4.4](https://github.com/aliariff/vscode-erb-beautify/compare/v0.4.3...v0.4.4) (2024-08-24)
 
 
