@@ -26,7 +26,7 @@ export default class HtmlBeautifier {
       );
       return result;
     } catch (error) {
-      this.handleError(error, "Error occurred while formatting");
+      this.handleError(error);
       throw error;
     }
   }
@@ -55,10 +55,9 @@ export default class HtmlBeautifier {
       this.logChannel.info(`Formatting ERB with command: ${fullCommand}`);
 
       if (!htmlbeautifier.stdin || !htmlbeautifier.stdout) {
-        return this.handleSpawnError(
-          reject,
-          "Couldn't initialize STDIN or STDOUT"
-        );
+        const error = "Failed to spawn process, missing stdin/stdout";
+        this.handleError(error);
+        reject(error);
       }
 
       const stdoutChunks: Buffer[] = [];
@@ -67,13 +66,10 @@ export default class HtmlBeautifier {
       htmlbeautifier.stdout.on("data", (chunk) => stdoutChunks.push(chunk));
       htmlbeautifier.stderr.on("data", (chunk) => stderrChunks.push(chunk));
 
-      htmlbeautifier.on("error", (err) =>
-        this.handleSpawnError(
-          reject,
-          `Couldn't run ${this.exe}: ${err.message}`,
-          err
-        )
-      );
+      htmlbeautifier.on("error", (error) => {
+        this.handleError(error);
+        reject(error);
+      });
 
       htmlbeautifier.on("exit", (code) => {
         const formattedResult = Buffer.concat(stdoutChunks).toString();
@@ -85,25 +81,6 @@ export default class HtmlBeautifier {
       htmlbeautifier.stdin.write(input);
       htmlbeautifier.stdin.end();
     });
-  }
-
-  /**
-   * Handles errors during process spawning.
-   * @param reject The promise reject function.
-   * @param message The error message to log and show to the user.
-   * @param err Optional error object.
-   */
-  private handleSpawnError(
-    reject: (reason?: any) => void,
-    message: string,
-    err?: Error
-  ): void {
-    this.logChannel.warn(message);
-    vscode.window.showErrorMessage(message);
-    if (err) {
-      this.logChannel.warn(err.message);
-    }
-    reject(err || new Error(message));
   }
 
   /**
@@ -122,10 +99,9 @@ export default class HtmlBeautifier {
     reject: (reason?: any) => void
   ): void {
     if (code && code !== 0) {
-      const error = `Failed with exit code: ${code}. ${errorMessage}`;
-      this.logChannel.error(error);
-      vscode.window.showErrorMessage(error);
-      reject(new Error(error));
+      const error = `Failed with exit code ${code}. ${errorMessage}`;
+      this.handleError(error);
+      reject(error);
     } else {
       resolve(result);
     }
@@ -134,13 +110,12 @@ export default class HtmlBeautifier {
   /**
    * Handles errors by logging and displaying a message to the user.
    * @param error The error object or message.
-   * @param userMessage The message to display to the user.
    */
-  private handleError(error: any, userMessage: string): void {
-    const errorMessage =
-      error instanceof Error ? error.message : "Unknown error occurred";
-    this.logChannel.error(errorMessage);
-    vscode.window.showErrorMessage(`${userMessage}: ${errorMessage}`);
+  private handleError(error: any): void {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const fullMessage = `Error formatting ERB: ${errorMessage}`;
+    this.logChannel.error(fullMessage);
+    vscode.window.showErrorMessage(fullMessage);
   }
 
   /**
