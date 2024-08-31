@@ -233,7 +233,7 @@ export default class HtmlBeautifier {
       const eol = vscode.workspace.getConfiguration().get("files.eol");
 
       // Determine newline character(s) based on the 'files.eol' setting and the platform
-      let newline = eol === "auto" ? (this.isWindows() ? "\r\n" : "\n") : eol;
+      const newline = eol === "auto" ? (this.isWindows() ? "\r\n" : "\n") : eol;
 
       // Append the newline to the result
       result += newline;
