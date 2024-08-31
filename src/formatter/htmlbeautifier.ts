@@ -3,7 +3,7 @@ import * as cp from "child_process";
 const isWsl = require("is-wsl");
 
 export default class HtmlBeautifier {
-  private logChannel: vscode.LogOutputChannel;
+  public logChannel: vscode.LogOutputChannel;
 
   constructor() {
     this.logChannel = vscode.window.createOutputChannel("ERB Beautifier", {
@@ -17,18 +17,11 @@ export default class HtmlBeautifier {
    * @returns A promise that resolves to the formatted string.
    */
   public async format(input: string): Promise<string> {
-    try {
-      const startTime = Date.now();
-      const result = await this.executeCommand(input);
-      const duration = Date.now() - startTime;
-      this.logChannel.info(
-        `Formatting completed successfully in ${duration}ms.`
-      );
-      return result;
-    } catch (error) {
-      this.handleError(error, "Error occurred while formatting");
-      throw error;
-    }
+    const startTime = Date.now();
+    const result = await this.executeCommand(input);
+    const duration = Date.now() - startTime;
+    this.logChannel.info(`Formatting completed successfully in ${duration}ms.`);
+    return result;
   }
 
   /**
@@ -49,16 +42,13 @@ export default class HtmlBeautifier {
         ...shellOptions,
       });
 
-      const fullCommand = `${this.exe} ${this.cliOptions.join(" ")} (cwd: ${
-        vscode.workspace.rootPath || __dirname
-      }) with custom env: ${JSON.stringify(this.customEnvVars)}`;
+      const fullCommand = `${this.exe} ${this.cliOptions.join(
+        " "
+      )} with custom env: ${JSON.stringify(this.customEnvVars)}`;
       this.logChannel.info(`Formatting ERB with command: ${fullCommand}`);
 
       if (!htmlbeautifier.stdin || !htmlbeautifier.stdout) {
-        return this.handleSpawnError(
-          reject,
-          "Couldn't initialize STDIN or STDOUT"
-        );
+        reject("Failed to spawn process, missing stdin/stdout");
       }
 
       const stdoutChunks: Buffer[] = [];
@@ -67,80 +57,24 @@ export default class HtmlBeautifier {
       htmlbeautifier.stdout.on("data", (chunk) => stdoutChunks.push(chunk));
       htmlbeautifier.stderr.on("data", (chunk) => stderrChunks.push(chunk));
 
-      htmlbeautifier.on("error", (err) =>
-        this.handleSpawnError(
-          reject,
-          `Couldn't run ${this.exe}: ${err.message}`,
-          err
-        )
-      );
+      htmlbeautifier.on("error", (error) => {
+        reject(error);
+      });
 
       htmlbeautifier.on("exit", (code) => {
         const formattedResult = Buffer.concat(stdoutChunks).toString();
         const finalResult = this.handleFinalNewline(input, formattedResult);
         const errorMessage = Buffer.concat(stderrChunks).toString();
-        this.handleExit(code, finalResult, errorMessage, resolve, reject);
+        if (code && code !== 0) {
+          reject(`Failed with exit code ${code}. ${errorMessage}`);
+        } else {
+          resolve(finalResult);
+        }
       });
 
       htmlbeautifier.stdin.write(input);
       htmlbeautifier.stdin.end();
     });
-  }
-
-  /**
-   * Handles errors during process spawning.
-   * @param reject The promise reject function.
-   * @param message The error message to log and show to the user.
-   * @param err Optional error object.
-   */
-  private handleSpawnError(
-    reject: (reason?: any) => void,
-    message: string,
-    err?: Error
-  ): void {
-    this.logChannel.warn(message);
-    vscode.window.showErrorMessage(message);
-    if (err) {
-      this.logChannel.warn(err.message);
-    }
-    reject(err || new Error(message));
-  }
-
-  /**
-   * Handles the process exit event and resolves or rejects the promise.
-   * @param code The process exit code.
-   * @param result The formatted result.
-   * @param errorMessage The error message, if any.
-   * @param resolve The promise resolve function.
-   * @param reject The promise reject function.
-   */
-  private handleExit(
-    code: number | null,
-    result: string,
-    errorMessage: string,
-    resolve: (value: string | PromiseLike<string>) => void,
-    reject: (reason?: any) => void
-  ): void {
-    if (code && code !== 0) {
-      const error = `Failed with exit code: ${code}. ${errorMessage}`;
-      this.logChannel.error(error);
-      vscode.window.showErrorMessage(error);
-      reject(new Error(error));
-    } else {
-      resolve(result);
-    }
-  }
-
-  /**
-   * Handles errors by logging and displaying a message to the user.
-   * @param error The error object or message.
-   * @param userMessage The message to display to the user.
-   */
-  private handleError(error: any, userMessage: string): void {
-    const errorMessage =
-      error instanceof Error ? error.message : "Unknown error occurred";
-    this.logChannel.error(errorMessage);
-    vscode.window.showErrorMessage(`${userMessage}: ${errorMessage}`);
   }
 
   /**

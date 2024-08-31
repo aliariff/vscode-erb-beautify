@@ -82,6 +82,14 @@
                     "type": "object",
                     "default": {},
                     "description": "Custom environment variables to pass to the htmlbeautifier"
+                },
+                "vscode-erb-beautify.ignoreFormatFilePatterns": {
+                    "type": "array",
+                    "default": [],
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Ignore formatting for files matching these patterns"
                 }
             }
         }
@@ -97,6 +105,7 @@
     "devDependencies": {
         "@semantic-release/changelog": "^6.0.3",
         "@semantic-release/git": "^10.0.1",
+        "@types/micromatch": "^4.0.9",
         "@types/mocha": "^10.0.7",
         "@types/node": "20.x",
         "@types/vscode": "^1.80.0",
@@ -110,6 +119,7 @@
         "typescript": "^5.4.5"
     },
     "dependencies": {
-        "is-wsl": "^2.2.0"
+        "is-wsl": "^2.2.0",
+        "micromatch": "^4.0.8"
     }
 }

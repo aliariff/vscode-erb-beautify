@@ -3,54 +3,58 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
 
-suite("ERB Formatter/Beautify tests", () => {
-  const sleep = (ms: number) =>
+suite("ERB Formatter/Beautify Tests", () => {
+  /**
+   * Sleeps for a given number of milliseconds.
+   * @param ms - Milliseconds to sleep.
+   * @returns A promise that resolves after the specified delay.
+   */
+  const sleep = (ms: number): Promise<void> =>
     new Promise((resolve) => setTimeout(resolve, ms));
 
   /**
-   * Resolve the test file path located in the `fixtures` directory.
+   * Resolves the test file path located in the `fixtures` directory.
    * @param filename - The name of the file.
    * @returns The full path of the test file.
    */
-  function resolveTestFilePath(filename: string): string {
-    return path.resolve(__dirname, "../../", "src/test/fixtures/", filename);
-  }
+  const resolveTestFilePath = (filename: string): string =>
+    path.resolve(__dirname, "../../", "src/test/fixtures/", filename);
 
   /**
    * Reads the content of a test file located in the `fixtures` directory.
    * @param filename - The name of the file to be read.
    * @returns The content of the file in UTF-8 encoding.
    */
-  function readTestFile(filename: string): string {
-    return fs.readFileSync(resolveTestFilePath(filename), "utf-8");
-  }
+  const readTestFile = (filename: string): string =>
+    fs.readFileSync(resolveTestFilePath(filename), "utf-8");
 
   /**
    * Changes a specific configuration value.
    * @param key - The configuration key.
    * @param value - The new value to set.
+   * @returns A promise that resolves after the configuration is updated.
    */
-  async function changeConfig(key: string, value: any): Promise<void> {
+  const changeConfig = async (key: string, value: any): Promise<void> => {
     await vscode.workspace
       .getConfiguration()
       .update(key, value, vscode.ConfigurationTarget.Global);
-  }
+  };
 
   /**
    * Formats a document and asserts its content against an expected formatted version.
    * @param initialFile - The initial unformatted file name.
    * @param expectedFile - The expected formatted file name.
    * @param formatCommand - The vscode command to execute for formatting.
+   * @returns A promise that resolves after the document is formatted and asserted.
    */
-  async function formatAndAssert(
+  const formatAndAssert = async (
     initialFile: string,
     expectedFile: string,
     formatCommand: string = "editor.action.formatDocument"
-  ): Promise<void> {
-    const document = await vscode.workspace.openTextDocument({
-      language: "erb",
-      content: readTestFile(initialFile),
-    });
+  ): Promise<void> => {
+    const document = await vscode.workspace.openTextDocument(
+      resolveTestFilePath(initialFile)
+    );
 
     await vscode.window.showTextDocument(document);
     await sleep(1500); // Allow time for the extension to load.
@@ -62,67 +66,59 @@ suite("ERB Formatter/Beautify tests", () => {
     await vscode.commands.executeCommand(formatCommand);
     await sleep(500); // Allow time for the formatting to occur.
 
-    assert.strictEqual(document.getText(), readTestFile(expectedFile));
-  }
-
-  test("formats whole document without bundler", async () => {
-    await changeConfig("vscode-erb-beautify.useBundler", false);
-    await formatAndAssert(
-      "sample_unformatted.html.erb",
-      "sample_formatted.html.erb"
+    assert.strictEqual(
+      document.getText(),
+      readTestFile(expectedFile),
+      `Formatting did not produce the expected result for ${initialFile}`
     );
-  });
+  };
 
-  test("formats whole document using bundler", async () => {
-    await changeConfig("vscode-erb-beautify.useBundler", true);
-    await formatAndAssert(
-      "sample_unformatted.html.erb",
-      "sample_formatted.html.erb"
-    );
-  });
+  /**
+   * Runs a series of formatting tests with various configurations.
+   * @param useBundler - Whether to use bundler for formatting.
+   * @param formatSelection - Whether to format the selection instead of the whole document.
+   * @returns A promise that resolves after the tests are executed.
+   */
+  const runFormattingTests = async (
+    useBundler: boolean,
+    formatSelection = false
+  ) => {
+    const formatCommand = formatSelection
+      ? "editor.action.formatSelection"
+      : "editor.action.formatDocument";
 
-  test("formats selection without bundler", async () => {
-    await changeConfig("vscode-erb-beautify.useBundler", false);
-    await formatAndAssert(
-      "sample_unformatted.html.erb",
-      "sample_formatted.html.erb",
-      "editor.action.formatSelection"
-    );
-  });
-
-  test("formats selection using bundler", async () => {
-    await changeConfig("vscode-erb-beautify.useBundler", true);
+    await changeConfig("vscode-erb-beautify.useBundler", useBundler);
     await formatAndAssert(
       "sample_unformatted.html.erb",
       "sample_formatted.html.erb",
-      "editor.action.formatSelection"
+      formatCommand
     );
+  };
+
+  test("Formats whole document without bundler", async () => {
+    await runFormattingTests(false);
   });
 
-  test("formats without encoding issue", async () => {
+  test("Formats whole document using bundler", async () => {
+    await runFormattingTests(true);
+  });
+
+  test("Formats selection without bundler", async () => {
+    await runFormattingTests(false, true);
+  });
+
+  test("Formats selection using bundler", async () => {
+    await runFormattingTests(true, true);
+  });
+
+  test("Formats without encoding issue", async () => {
     await formatAndAssert(
       "encoding_unformatted.html.erb",
       "encoding_formatted.html.erb"
     );
   });
 
-  test("Input ERB without final newline, insertFinalNewline=true", async () => {
-    await changeConfig("files.insertFinalNewline", true);
-    await formatAndAssert(
-      "without_final_newline.html.erb",
-      "with_final_newline.html.erb"
-    );
-  });
-
-  test("Input ERB with final newline, insertFinalNewline=true", async () => {
-    await changeConfig("files.insertFinalNewline", true);
-    await formatAndAssert(
-      "with_final_newline.html.erb",
-      "with_final_newline.html.erb"
-    );
-  });
-
-  test("Input ERB without final newline, insertFinalNewline=false", async () => {
+  test("Formats ERB without final newline, insertFinalNewline=false", async () => {
     await changeConfig("files.insertFinalNewline", false);
     await formatAndAssert(
       "without_final_newline.html.erb",
@@ -130,11 +126,43 @@ suite("ERB Formatter/Beautify tests", () => {
     );
   });
 
-  test("Input ERB with final newline, insertFinalNewline=false", async () => {
+  test("Formats ERB without final newline, insertFinalNewline=true", async () => {
+    await changeConfig("files.insertFinalNewline", true);
+    await formatAndAssert(
+      "without_final_newline.html.erb",
+      "with_final_newline.html.erb"
+    );
+  });
+
+  test("Formats ERB with final newline, insertFinalNewline=true", async () => {
+    await changeConfig("files.insertFinalNewline", true);
+    await formatAndAssert(
+      "with_final_newline.html.erb",
+      "with_final_newline.html.erb"
+    );
+  });
+
+  test("Formats ERB with final newline, insertFinalNewline=false", async () => {
     await changeConfig("files.insertFinalNewline", false);
     await formatAndAssert(
       "with_final_newline.html.erb",
       "with_final_newline.html.erb"
+    );
+  });
+
+  test("Ignores formatting for files matching ignore patterns", async () => {
+    await changeConfig("vscode-erb-beautify.ignoreFormatFilePatterns", [
+      "**/*.text.erb",
+    ]);
+
+    const initialFile = "ignored_file.text.erb";
+    const initialContent = readTestFile(initialFile);
+
+    await formatAndAssert(initialFile, initialFile);
+    assert.strictEqual(
+      readTestFile(initialFile),
+      initialContent,
+      "File content should remain unchanged when ignored"
     );
   });
 });
