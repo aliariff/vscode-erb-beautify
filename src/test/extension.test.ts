@@ -113,6 +113,14 @@ suite("ERB Formatter/Beautify Tests", () => {
     );
   });
 
+  test("Formats ERB without final newline, insertFinalNewline=false", async () => {
+    await changeConfig("files.insertFinalNewline", false);
+    await formatAndAssert(
+      "without_final_newline.html.erb",
+      "without_final_newline.html.erb"
+    );
+  });
+
   test("Formats ERB without final newline, insertFinalNewline=true", async () => {
     await changeConfig("files.insertFinalNewline", true);
     await formatAndAssert(
@@ -126,14 +134,6 @@ suite("ERB Formatter/Beautify Tests", () => {
     await formatAndAssert(
       "with_final_newline.html.erb",
       "with_final_newline.html.erb"
-    );
-  });
-
-  test("Formats ERB without final newline, insertFinalNewline=false", async () => {
-    await changeConfig("files.insertFinalNewline", false);
-    await formatAndAssert(
-      "without_final_newline.html.erb",
-      "without_final_newline.html.erb"
     );
   });
 
