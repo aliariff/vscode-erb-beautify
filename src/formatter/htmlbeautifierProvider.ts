@@ -59,14 +59,17 @@ export default class HtmlBeautifierProvider
     range: vscode.Range
   ): vscode.ProviderResult<vscode.TextEdit[]> {
     if (this.shouldIgnore(document)) {
-      console.log(`Ignoring ${document.fileName}`);
+      this.htmlbeautifier.logChannel.info(`Ignoring ${document.fileName}`);
       return [];
     }
 
     return this.htmlbeautifier.format(document.getText(range)).then(
       (result) => [new vscode.TextEdit(range, result)],
       (err) => {
-        console.error(`Error formatting ${document.fileName}:`, err);
+        this.htmlbeautifier.logChannel.error(
+          `Error formatting ${document.fileName}:`,
+          err
+        );
         return [];
       }
     );

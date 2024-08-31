@@ -3,7 +3,7 @@ import * as cp from "child_process";
 const isWsl = require("is-wsl");
 
 export default class HtmlBeautifier {
-  private logChannel: vscode.LogOutputChannel;
+  public logChannel: vscode.LogOutputChannel;
 
   constructor() {
     this.logChannel = vscode.window.createOutputChannel("ERB Beautifier", {
