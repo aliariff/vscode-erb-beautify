@@ -42,9 +42,9 @@ export default class HtmlBeautifier {
         ...shellOptions,
       });
 
-      const fullCommand = `${this.exe} ${this.cliOptions.join(" ")} (cwd: ${
-        vscode.workspace.rootPath || __dirname
-      }) with custom env: ${JSON.stringify(this.customEnvVars)}`;
+      const fullCommand = `${this.exe} ${this.cliOptions.join(
+        " "
+      )} with custom env: ${JSON.stringify(this.customEnvVars)}`;
       this.logChannel.info(`Formatting ERB with command: ${fullCommand}`);
 
       if (!htmlbeautifier.stdin || !htmlbeautifier.stdout) {
