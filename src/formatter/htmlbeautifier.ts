@@ -4,11 +4,15 @@ const isWsl = require("is-wsl");
 
 export default class HtmlBeautifier {
   public logChannel: vscode.LogOutputChannel;
+  private diag: vscode.DiagnosticCollection;
+
+  static PLUGIN_NAME="ERB Beautifier";
 
   constructor() {
-    this.logChannel = vscode.window.createOutputChannel("ERB Beautifier", {
+    this.logChannel = vscode.window.createOutputChannel(HtmlBeautifier.PLUGIN_NAME, {
       log: true,
     });
+    this.diag = vscode.languages.createDiagnosticCollection('htmlbeautifier');
   }
 
   /**
@@ -64,6 +68,8 @@ export default class HtmlBeautifier {
       htmlbeautifier.on("exit", (code) => {
         const errorMessage = Buffer.concat(stderrChunks).toString().trim();
 
+        this.populateDiagnostics(errorMessage);
+
         // Handle non-zero exit codes as errors
         if (code !== 0) {
           return reject(
@@ -79,7 +85,6 @@ export default class HtmlBeautifier {
             `Formatting failed: the output is unexpectedly empty despite non-empty input. ${errorMessage}`
           );
         }
-
         // If no errors, resolve with the formatted result
         resolve(finalResult);
       });
@@ -88,6 +93,32 @@ export default class HtmlBeautifier {
       htmlbeautifier.stdin.end();
     });
   }
+
+  static FILTER_MESSAGE = new RegExp(/:(.*)on line (\d+)/);
+  private populateDiagnostics(stderr: string) {
+    let location = vscode.Uri.file("unknown");
+    if (vscode.window.activeTextEditor !== undefined) {
+      location = vscode.window.activeTextEditor.document.uri;
+
+      this.diag.clear();
+      for (let element of stderr.split('\n')) {
+        let error_location = element.indexOf('Error parsing');
+        let line_location = element.indexOf('on line');
+        if ((error_location !== -1) && (line_location !== -1)) {
+          let regex_result = HtmlBeautifier.FILTER_MESSAGE.exec(element.slice(error_location));
+          if (regex_result) {
+            let lineNumber = +regex_result[2].trim() - 1;//zero-based vs 1-based
+            let message = HtmlBeautifier.PLUGIN_NAME+': ' +regex_result[1].trim();
+            let range = vscode.window.activeTextEditor.document.lineAt(lineNumber).range;
+            let one = new vscode.Diagnostic(range, message);
+            this.diag.set(location, [one]);
+            break;
+          }
+        }
+      }
+    };
+  }
+
 
   /**
    * Gets the executable path for HTML Beautifier based on the configuration.
@@ -215,3 +246,4 @@ export default class HtmlBeautifier {
     return ""; // Return empty if no newline found
   }
 }
+

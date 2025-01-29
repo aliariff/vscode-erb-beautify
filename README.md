@@ -102,7 +102,7 @@ Below is a list of settings you can configure in your `settings.json` file:
 | `vscode-erb-beautify.tabStops`                 | Number of spaces per indent.                                                                                                        | `2`              |
 | `vscode-erb-beautify.tab`                      | Indent using tabs instead of spaces.                                                                                                | `false`          |
 | `vscode-erb-beautify.indentBy`                 | Indent the output by a specified number of steps.                                                                                   | `0`              |
-| `vscode-erb-beautify.stopOnErrors`             | Stop formatting when invalid nesting is encountered in the input.                                                                   | `false`          |
+| `vscode-erb-beautify.stopOnErrors`             | Stop formatting when invalid nesting is encountered in the input. Errors will show in the problem window                        | `false`          |
 | `vscode-erb-beautify.keepBlankLines`           | Number of consecutive blank lines to keep in the formatted output.                                                                  | `0`              |
 | `vscode-erb-beautify.customEnvVar`             | Custom environment variables to pass to `htmlbeautifier`.                                                                           | `{}`             |
 | `vscode-erb-beautify.ignoreFormatFilePatterns` | Glob patterns for files to ignore during formatting.                                                                                | `[]`             |

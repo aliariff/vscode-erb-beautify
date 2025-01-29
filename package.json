@@ -1,125 +1,128 @@
 {
-    "name": "vscode-erb-beautify",
-    "displayName": "ERB Formatter/Beautify",
-    "description": "Format/Beautify ERB files",
-    "version": "0.5.0",
-    "icon": "images/icon.png",
-    "publisher": "aliariff",
-    "license": "MIT",
-    "bugs": "https://github.com/aliariff/vscode-erb-beautify/issues",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/aliariff/vscode-erb-beautify"
-    },
-    "engines": {
-        "vscode": "^1.80.0"
-    },
-    "categories": [
-        "Formatters"
-    ],
-    "activationEvents": [
-        "onLanguage:erb"
-    ],
-    "main": "./out/extension.js",
-    "contributes": {
-        "languages": [
-            {
-                "id": "erb",
-                "aliases": [
-                    "ERB"
-                ],
-                "extensions": [
-                    ".erb",
-                    ".html.erb"
-                ]
-            }
+  "name": "vscode-erb-beautify",
+  "displayName": "ERB Formatter/Beautify",
+  "description": "Format/Beautify ERB files",
+  "version": "0.5.0",
+  "icon": "images/icon.png",
+  "publisher": "vvvrrooomm",
+  "license": "MIT",
+  "bugs": "https://github.com/vvvrrooomm/vscode-erb-beautify/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vvvrrooomm/vscode-erb-beautify"
+  },
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Formatters"
+  ],
+  "activationEvents": [
+    "onLanguage:erb"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "erb",
+        "aliases": [
+          "ERB"
         ],
-        "configuration": {
-            "type": "object",
-            "title": "VSCode ERB Beautify configuration",
-            "properties": {
-                "vscode-erb-beautify.executePath": {
-                    "type": "string",
-                    "default": "htmlbeautifier",
-                    "description": "Path to the htmlbeautifier executable, set this to absolute path when you have different htmlbeautifier location"
-                },
-                "vscode-erb-beautify.useBundler": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Execute htmlbeautifier using bundler (ie 'bundle exec htmlbeautifier'). If this true, vscode-erb-beautify.executePath is ignored"
-                },
-                "vscode-erb-beautify.bundlerPath": {
-                    "type": "string",
-                    "default": "bundle",
-                    "description": "Path to the bundler executable, set this to absolute path when you have different bundler location"
-                },
-                "vscode-erb-beautify.tabStops": {
-                    "type": "number",
-                    "default": 2,
-                    "description": "Set number of spaces per indent (default 2)"
-                },
-                "vscode-erb-beautify.tab": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Indent using tabs"
-                },
-                "vscode-erb-beautify.indentBy": {
-                    "type": "number",
-                    "default": 0,
-                    "description": "Indent the output by NUMBER steps (default 0)"
-                },
-                "vscode-erb-beautify.stopOnErrors": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Stop when invalid nesting is encountered in the input"
-                },
-                "vscode-erb-beautify.keepBlankLines": {
-                    "type": "number",
-                    "default": 0,
-                    "description": "Set number of consecutive blank lines (default 0)"
-                },
-                "vscode-erb-beautify.customEnvVar": {
-                    "type": "object",
-                    "default": {},
-                    "description": "Custom environment variables to pass to the htmlbeautifier"
-                },
-                "vscode-erb-beautify.ignoreFormatFilePatterns": {
-                    "type": "array",
-                    "default": [],
-                    "items": {
-                        "type": "string"
-                    },
-                    "description": "Ignore formatting for files matching these patterns"
-                }
-            }
+        "extensions": [
+          ".erb",
+          ".html.erb"
+        ]
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "VSCode ERB Beautify configuration",
+      "properties": {
+        "vscode-erb-beautify.executePath": {
+          "type": "string",
+          "default": "htmlbeautifier",
+          "description": "Path to the htmlbeautifier executable, set this to absolute path when you have different htmlbeautifier location"
+        },
+        "vscode-erb-beautify.useBundler": {
+          "type": "boolean",
+          "default": false,
+          "description": "Execute htmlbeautifier using bundler (ie 'bundle exec htmlbeautifier'). If this true, vscode-erb-beautify.executePath is ignored"
+        },
+        "vscode-erb-beautify.bundlerPath": {
+          "type": "string",
+          "default": "bundle",
+          "description": "Path to the bundler executable, set this to absolute path when you have different bundler location"
+        },
+        "vscode-erb-beautify.tabStops": {
+          "type": "number",
+          "default": 2,
+          "description": "Set number of spaces per indent (default 2)"
+        },
+        "vscode-erb-beautify.tab": {
+          "type": "boolean",
+          "default": false,
+          "description": "Indent using tabs"
+        },
+        "vscode-erb-beautify.indentBy": {
+          "type": "number",
+          "default": 0,
+          "description": "Indent the output by NUMBER steps (default 0)"
+        },
+        "vscode-erb-beautify.stopOnErrors": {
+          "type": "boolean",
+          "default": false,
+          "description": "Stop when invalid nesting is encountered in the input. Errors will show in the problem window"
+        },
+        "vscode-erb-beautify.keepBlankLines": {
+          "type": "number",
+          "default": 0,
+          "description": "Set number of consecutive blank lines (default 0)"
+        },
+        "vscode-erb-beautify.customEnvVar": {
+          "type": "object",
+          "default": {},
+          "description": "Custom environment variables to pass to the htmlbeautifier"
+        },
+        "vscode-erb-beautify.ignoreFormatFilePatterns": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "description": "Ignore formatting for files matching these patterns"
         }
-    },
-    "scripts": {
-        "vscode:prepublish": "npm run compile",
-        "compile": "tsc -p ./",
-        "watch": "tsc -watch -p ./",
-        "pretest": "npm run compile && npm run lint",
-        "lint": "eslint src --ext ts",
-        "test": "vscode-test"
-    },
-    "devDependencies": {
-        "@semantic-release/changelog": "^6.0.3",
-        "@semantic-release/git": "^10.0.1",
-        "@types/micromatch": "^4.0.9",
-        "@types/mocha": "^10.0.7",
-        "@types/node": "20.x",
-        "@types/vscode": "^1.80.0",
-        "@typescript-eslint/eslint-plugin": "^7.14.1",
-        "@typescript-eslint/parser": "^7.11.0",
-        "@vscode/test-cli": "^0.0.9",
-        "@vscode/test-electron": "^2.4.0",
-        "eslint": "^8.57.0",
-        "semantic-release": "^24.1.0",
-        "semantic-release-vsce": "^5.7.4",
-        "typescript": "^5.4.5"
-    },
-    "dependencies": {
-        "is-wsl": "^2.2.0",
-        "micromatch": "^4.0.8"
+      }
     }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "package": "npm exec vsce package",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@types/micromatch": "^4.0.9",
+    "@types/mocha": "^10.0.7",
+    "@types/node": "20.x",
+    "@types/vscode": "^1.80.0",
+    "@typescript-eslint/eslint-plugin": "^7.14.1",
+    "@typescript-eslint/parser": "^7.11.0",
+    "@vscode/test-cli": "^0.0.9",
+    "@vscode/test-electron": "^2.4.0",
+    "eslint": "^8.57.0",
+    "semantic-release": "^24.1.0",
+    "semantic-release-vsce": "^5.7.4",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@vscode/vsce": "^3.2.1",
+    "is-wsl": "^2.2.0",
+    "micromatch": "^4.0.8",
+    "vsce": "^2.15.0"
+  }
 }
